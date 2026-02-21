@@ -1,0 +1,64 @@
+version: "3.8"
+
+name: spring-boot-template
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: springboot-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=spring_boot_template
+    command:
+      - "--default-time-zone=+08:00"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - sbt
+
+  redis:
+    image: redis:8.0
+    container_name: springboot-redis
+    ports:
+      - "6379:6379"
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server --requirepass 123456
+    volumes:
+      - redis-data:/data
+    networks:
+      - sbt
+
+  # 消息队列
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: springboot-rabbitmq
+    hostname: springboot-rabbitmq
+    ports:
+      - "5672:5672"   # mq端口,用于收发消息
+      - "15672:15672"   # web控制台页面
+    environment:
+      - TZ=Asia/Shanghai
+      - RABBITMQ_DEFAULT_VHOST=/springboot-rabbitmq
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq-plugin:/plugins
+    networks:
+      - sbt
+
+
+
+volumes:
+  mysql-data:
+  redis-data:
+  rabbitmq_data:
+  rabbitmq-plugin:
+
+networks:
+  sbt:

@@ -1,0 +1,44 @@
+{
+	"name": "fpt-cli",
+	"version": "1.0.0",
+	"description": "fpt-cli",
+	"main": "index.js",
+	"type": "module",
+	"bin": {
+		"fpt": "./bin/fpt.js"
+	},
+	"scripts": {
+		"format": "prettier --write \"**/*.{js,json,md}\"",
+		"format:check": "prettier --check \"**/*.{js,json,md}\"",
+		"format:watch": "prettier --write \"**/*.{js,json,md}\" --watch"
+	},
+	"keywords": [
+		"fpt",
+		"cli"
+	],
+	"author": "fpt",
+	"dependencies": {
+		"commander": "^14.0.3",
+		"ejs": "^4.0.1",
+		"fs-extra": "^11.3.3"
+	},
+	"devDependencies": {
+		"prettier": "^3.8.1"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"packageManager": "pnpm@10.11.0",
+	"files": [
+		"bin",
+		"commands",
+		"uitls",
+		"templates",
+		"package.json",
+		"README.md"
+	],
+	"repository": {
+		"type": "git",
+		"url": ""
+	}
+}

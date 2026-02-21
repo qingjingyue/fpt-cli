@@ -1,0 +1,61 @@
+/* 重置样式 */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    font-size: 14px;
+}
+
+/* 定义全局变量 */
+:root {
+    --font-color: #000000;
+    --bg-color: rgba(255, 255, 255, 0.3);
+}
+/* 主题为dark时 */
+:root.dark {
+    --font-color: #ffffff;
+    --bg-color: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    height: 100%;
+    color: var(--font-color);
+    font:
+        1em/1.4 'Microsoft Yahei',
+        'PingFang SC',
+        'Avenir',
+        'Segoe UI',
+        'Hiragino Sans GB',
+        'STHeiti',
+        'Microsoft Sans Serif',
+        'WenQuanYi Micro Hei',
+        sans-serif;
+}
+body,
+ul,
+h1,
+h3,
+h4,
+p,
+dl,
+dd {
+    padding: 0;
+    margin: 0;
+}
+a {
+    text-decoration: none;
+    color: var(--font-color);
+    outline: none;
+}
+a:hover {
+    color: var(--el-color-primary);
+}
+i {
+    font-style: normal;
+}
+
+ul {
+    list-style: none;
+}

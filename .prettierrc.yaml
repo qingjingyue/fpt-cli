@@ -1,0 +1,29 @@
+# 每行代码最大长度
+printWidth: 80
+
+# 缩进空格数
+tabWidth: 4
+
+# 使用制表符
+useTabs: true
+
+# 语句末尾添加分号
+semi: false
+
+# 使用单引号代替双引号
+singleQuote: true
+
+# 多行时添加尾逗号（none: 不添加）
+trailingComma: none
+
+# 对象花括号内添加空格 { foo: bar }
+bracketSpacing: true
+
+# 箭头函数参数始终添加括号 (x) => x
+arrowParens: always
+
+# 格式化嵌入的代码片段（如 markdown 中的代码块）
+embeddedLanguageFormatting: auto
+
+# 每行结束符（lf: 换行符）
+endOfLine: lf

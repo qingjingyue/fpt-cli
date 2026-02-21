@@ -1,0 +1,75 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_boot_template
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: localhost
+      password: 123456
+      port: 6379
+      database: 0
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /springboot-rabbitmq
+    username: rabbitmq
+    password: rabbitmq
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.example.domain.po
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
+
+# springdoc-openapi项目配置
+springdoc:
+  # 设置默认分组
+  swagger-ui:
+    # 文档路径
+    path: /swagger-ui.html
+    # 如果需要对接口进行排序
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  # 扫描路径
+  packages-to-scan: com.example.server.controller
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  # 开启增强
+  enable: true
+  # 生产环境关闭
+  production: false
+  # 开启Basic认证（可选）
+  basic:
+    enable: false
+    username: admin
+    password: 123456
+  setting:
+    # 语言
+    language: zh_cn
+
+
+
+spring-boot-template:
+  jwt:
+    token-name: token
+    secret-key: secretKey
+    ttl: 604800000
+
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--父工程-->
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>SpringBootTemplate</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <!--本工程 (实体模块)-->
+    <artifactId>domain</artifactId>
+
+    <!--管理该模块的依赖-->
+    <dependencies>
+        <!--引入公共模块-->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!--引入Lombok模块-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope> <!--provided: 编译时需要，运行时不需要, 不参与打包-->
+        </dependency>
+        <!--引入Validation效验模块-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!--引入MyBatis-Plus模块-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <scope>provided</scope> <!-- 编译时提供，运行时不包含 -->
+        </dependency>
+    </dependencies>
+
+
+</project>

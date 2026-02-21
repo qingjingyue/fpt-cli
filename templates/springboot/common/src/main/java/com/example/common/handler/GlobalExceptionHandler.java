@@ -7,12 +7,12 @@ import com.example.common.result.Result;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * 处理 @Validated 校验失败异常（单个参数校验）
+     * 处理 @Validated 校验失败异常 (spring对@Valid的加强)
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public Result<Void> handViolationException(ConstraintViolationException e) {
@@ -75,15 +75,25 @@ public class GlobalExceptionHandler {
      * 捕获数据库唯一索引异常
      * 例如：用户名重复
      */
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public Result<Void> exceptionHandler(SQLIntegrityConstraintViolationException e) {
-        // Duplicate entry 'username' for key 'employee.idx_username'
+    @ExceptionHandler(DuplicateKeyException.class)
+    public Result<Void> exceptionHandler(DuplicateKeyException e) {
+        // Duplicate entry 'username' for key 'user.username'
         // username重复
         String message = e.getMessage();
-        if (message.contains("Duplicate entry")) {
-            String username = message.split(" ")[2];
-            return Result.error("用户名: " + username + "已存在");
+        if (message.contains("Duplicate entry ")) {
+            return Result.error("该用户名已存在");
         }
         return Result.error(MessageConstant.UNKNOWN_ERROR);
     }
+
+
+    /**
+     * 保底异常处理
+     */
+    @ExceptionHandler(Exception.class)
+    public Result<Void> exceptionHandler(Exception e) {
+        log.error("未知异常: ", e);
+        return Result.error(MessageConstant.UNKNOWN_ERROR);
+    }
+
 }

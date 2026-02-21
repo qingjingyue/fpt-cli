@@ -21,7 +21,7 @@ public interface RedisConstant {
          *         <th>key(手机号)</th><th>value(验证码)</th>
          *     </tr>
          *     <tr>
-         *         <td>13800000000</td><td>123456</td>
+         *         <td>user:phone:code:13800000000</td><td>123456</td>
          *     </tr>
          * </table>
          */

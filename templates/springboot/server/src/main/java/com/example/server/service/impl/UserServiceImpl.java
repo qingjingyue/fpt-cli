@@ -1,8 +1,10 @@
 package com.example.server.service.impl;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.constants.RedisConstant;
+import com.example.common.constants.RegexConstant;
 import com.example.common.exceptions.BizException;
 import com.example.common.properties.JwtProperties;
 import com.example.common.utils.JwtUtil;
@@ -87,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUsername(phoneLoginDTO.getPhone());
             save(user);
         }
-        // 生成JWT令牌com.example.common.utils.
+        // 生成JWT令牌
         String token = JwtUtil.createJWT(user.getId(), jwtProperties);
         // 返回用户信息
         return UserInfoVO.builder()
@@ -100,6 +102,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void sendPhoneCode(String phone) {
+        // 效验手机号格式
+        if (!ReUtil.isMatch(RegexConstant.PHONE_PATTERN, phone)) {
+            throw new BizException("手机号格式错误");
+        }
         // 发送MQ消息
         rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, phone);
     }

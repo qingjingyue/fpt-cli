@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "spring-boot-template.jwt")
+@ConfigurationProperties(prefix = "example.jwt")
 public class JwtProperties {
 
     // 请求头中的令牌名称
@@ -14,7 +14,7 @@ public class JwtProperties {
     // 密钥
     private String secretKey = "secretKey";
     // 过期时间(秒)
-    private Long ttl = 604800000L;
+    private Long ttl = 24 * 60 * 60L;
 
 
 }

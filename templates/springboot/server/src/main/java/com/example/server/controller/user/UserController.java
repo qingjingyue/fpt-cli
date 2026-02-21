@@ -1,7 +1,6 @@
 package com.example.server.controller.user;
 
 
-import com.example.common.constants.RegexConstant;
 import com.example.common.result.Result;
 import com.example.domain.dto.AccountLoginDTO;
 import com.example.domain.dto.PhoneLoginDTO;
@@ -10,7 +9,6 @@ import com.example.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -47,9 +45,7 @@ public class UserController {
 
     @Operation(summary = "获取验证码")
     @GetMapping("/login/phone/code")
-    public Result<Void> getPhoneCode(@RequestParam("phone")
-                                     @Pattern(regexp = RegexConstant.PHONE_PATTERN, message = "手机号格式错误")
-                                     String phone) {
+    public Result<Void> getPhoneCode(@RequestParam("phone") String phone) {
         userService.sendPhoneCode(phone);
         return Result.success();
     }

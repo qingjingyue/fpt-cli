@@ -7,7 +7,7 @@
     <!--父工程-->
     <parent>
         <groupId>com.example</groupId>
-        <artifactId>SpringBootTemplate</artifactId>
+        <artifactId>example</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -24,6 +24,7 @@
                 <exclusion>
                     <groupId>org.springdoc</groupId>
                     <artifactId>springdoc-openapi-starter-common</artifactId>
+                    <!-- 2.3.0 -->
                 </exclusion>
             </exclusions>
         </dependency>

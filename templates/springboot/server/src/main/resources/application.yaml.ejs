@@ -16,7 +16,7 @@ spring:
     # mysql配置
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/spring_boot_template
+        url: jdbc:mysql://localhost:3306/<%= projectNameSnakeCase %>
         username: root
         password: 123456
     data:
@@ -30,7 +30,7 @@ spring:
     rabbitmq:
         host: localhost
         port: 5672
-        virtual-host: /springboot-rabbitmq
+        virtual-host: /<%= projectNamePrefix %>-rabbitmq
         username: rabbitmq
         password: rabbitmq
 
@@ -39,7 +39,7 @@ mybatis-plus:
     # xml映射文件路径
     mapper-locations: classpath:mapper/**/*.xml
     # 类型别名包
-    type-aliases-package: com.example.domain.po
+    type-aliases-package: com.<%= projectNamePrefix %>.domain.po
     configuration:
         # 日志实现类
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -62,7 +62,7 @@ springdoc:
     api-docs:
         path: /v3/api-docs
     # 扫描路径
-    packages-to-scan: com.example.server.controller
+    packages-to-scan: com.<%= projectNamePrefix %>.server.controller
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
     # 开启增强
@@ -79,7 +79,7 @@ knife4j:
         language: zh_cn
 
 # 项目配置
-example:
+<%= projectNamePrefix %>:
     jwt:
         token-name: token
         secret-key: secretKey

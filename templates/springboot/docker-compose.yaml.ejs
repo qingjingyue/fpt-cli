@@ -1,31 +1,30 @@
 version: '3.8'
 
 # volumes,networks 的 前缀
-name: spring-boot-template
+name: <%= projectName %>
 
 # 需要的服务 (中间件)
 services:
     # mysql数据库
     mysql:
         image: mysql:8.0
-        container_name: springboot-mysql
+        container_name: <%= projectNamePrefix %>-mysql
         ports:
             - '3306:3306'
         environment:
             - TZ=Asia/Shanghai
             - MYSQL_ROOT_PASSWORD=123456
-            - MYSQL_DATABASE=spring_boot_template # 初次启动创建的数据库名称
+            - MYSQL_DATABASE=<%= projectNameSnakeCase %> # 初次启动创建的数据库名称
         command:
             - '--default-time-zone=+08:00'
         volumes:
             - mysql-data:/var/lib/mysql # 挂载mysql数据目录
         networks:
-            - sbt
+            - <%= projectNamePrefix %>
 
-    # redis缓存
     redis:
         image: redis:8.0
-        container_name: springboot-redis
+        container_name: <%= projectNamePrefix %>-redis
         ports:
             - '6379:6379'
         environment:
@@ -34,26 +33,26 @@ services:
         volumes:
             - redis-data:/data # 挂载redis数据目录
         networks:
-            - sbt
+            - <%= projectNamePrefix %>
 
     # 消息队列
     rabbitmq:
         image: rabbitmq:3.8-management
-        container_name: springboot-rabbitmq
-        hostname: springboot-rabbitmq # 该容器的主机名
+        container_name: <%= projectNamePrefix %>-rabbitmq
+        hostname: <%= projectNamePrefix %>-rabbitmq # 该容器的主机名
         ports:
             - '5672:5672' # mq端口,用于收发消息
             - '15672:15672' # web控制台页面
         environment:
             - TZ=Asia/Shanghai
-            - RABBITMQ_DEFAULT_VHOST=/springboot-rabbitmq # rabbitmq的默认虚拟主机
+            - RABBITMQ_DEFAULT_VHOST=/<%= projectNamePrefix %>-rabbitmq # rabbitmq的默认虚拟主机
             - RABBITMQ_DEFAULT_USER=rabbitmq
             - RABBITMQ_DEFAULT_PASS=rabbitmq
         volumes:
             - rabbitmq_data:/var/lib/rabbitmq # 挂载rabbitmq数据目录
             - rabbitmq-plugin:/plugins # 挂载rabbitmq插件目录
         networks:
-            - sbt
+            - <%= projectNamePrefix %>
 
 volumes:
     mysql-data:
@@ -62,4 +61,4 @@ volumes:
     rabbitmq-plugin:
 
 networks:
-    sbt:
+    <%= projectNamePrefix %>:

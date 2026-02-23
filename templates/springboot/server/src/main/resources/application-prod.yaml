@@ -1,0 +1,18 @@
+example:
+  mysql:
+    host: example-mysql
+    database: example
+    username: root
+    password: 123456
+  redis:
+    host: example-redis
+    password: 123456
+    port: 6379
+  rabbitmq:
+    host: example-rabbitmq
+    port: 5672
+    virtual-host: /
+    username: rabbitmq
+    password: rabbitmq
+  knife4j:
+    production: true

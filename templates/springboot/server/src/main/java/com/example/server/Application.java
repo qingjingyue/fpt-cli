@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
 @SpringBootApplication
-public class SpringBootTemplateApplication {
+public class Application {
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootTemplateApplication.class, args);
+        SpringApplication.run(Application.class, args);
         log.info("启动成功...");
     }
 }

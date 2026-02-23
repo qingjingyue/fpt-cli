@@ -24,9 +24,7 @@ export function getPrefix(str) {
  * @returns {string} 字符串的大驼峰
  */
 export function toPascalCase(str) {
-	return str.replace(/(^\w|[-_\s]+\w)/g, (match) =>
-		match.replace(/[-_\s]+/g, '').toUpperCase()
-	)
+	return str.replace(/(^\w|[-_\s]+\w)/g, (match) => match.replace(/[-_\s]+/g, '').toUpperCase())
 }
 
 /**
@@ -39,15 +37,6 @@ export function toSnake(str) {
 	return str
 		.replace(/([A-Z])/g, '_$1')
 		.replace(/^_/, '')
-		.replace(
-			/_([A-Z]+)(?=[A-Z][a-z]|$)/g,
-			(match, p1) => '_' + p1.toLowerCase()
-		)
+		.replace(/_([A-Z]+)(?=[A-Z][a-z]|$)/g, (match, p1) => '_' + p1.toLowerCase())
 		.toLowerCase()
-}
-
-export default {
-	getPrefix,
-	toPascalCase,
-	toSnake
 }

@@ -1,0 +1,99 @@
+# 工作流名称
+name: Deploy Vue to Nginx
+
+# 触发条件
+on:
+    push: # 当有代码推送到指定分支时触发
+        branches:
+            - main
+            - master
+        paths: # 当指定路径下的文件有变更时触发
+            - 'example/**'
+    workflow_dispatch: # 手动触发
+
+# 设置权限
+permissions:
+    # 只需要读取代码库的权限
+    contents: read
+
+# 需要执行的任务
+jobs:
+    # 任务名称 (构建)
+    build:
+        # 运行环境
+        runs-on: ubuntu-latest
+
+        # 任务步骤
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v6
+
+            - name: 安装 pnpm
+              uses: pnpm/action-setup@v3
+              with:
+                  version: 10
+
+            - name: 安装依赖
+              run: |
+                  cd ./example
+                  pnpm install
+
+            - name: 构建项目
+              run: |
+                  cd ./example
+                  pnpm build:prod
+
+            - name: 打包构建产物
+              run: |
+                  cd ./example
+                  mkdir -p example
+                  mv ./dist/ ./example
+                  mv ./conf.d/ ./example
+                  mv ./docker-compose.yaml ./example
+                  tar -czvf example.tar.gz ./example
+
+            - name: 上传构建产物
+              uses: actions/upload-artifact@v6
+              with:
+                  name: example # 构建产物被上传后的名称
+                  path: ./example/example.tar.gz # 构建产物路径
+
+    # 任务名称 (部署)
+    deploy:
+        # 运行环境
+        runs-on: ubuntu-latest
+        # 依赖任务
+        needs: build
+
+        # 任务步骤
+        steps:
+            - name: 下载构建产物
+              uses: actions/download-artifact@v6
+              with:
+                  name: example
+                  path: .
+
+            - name: 上传到服务器
+              uses: appleboy/scp-action@v1.0.0
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  port: ${{ secrets.SERVER_PORT }}
+                  username: ${{ secrets.SERVER_USER }}
+                  password: ${{ secrets.SERVER_PASSWORD }}
+                  source: example.tar.gz
+                  target: /root/workspace/
+
+            - name: 部署
+              uses: appleboy/ssh-action@v1.2.5
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  port: ${{ secrets.SERVER_PORT }}
+                  username: ${{ secrets.SERVER_USER }}
+                  password: ${{ secrets.SERVER_PASSWORD }}
+                  script: |
+                      cd /root/workspace/
+                      rm -rf example/dist
+                      tar -xzvf example.tar.gz
+                      cd example
+                      docker compose up -d nginx
+                      docker compose restart nginx

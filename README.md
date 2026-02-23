@@ -28,7 +28,7 @@
 npm install -g fpt-cli
 ```
 
-2. 创建项目
+2. 创建项目 (准备好目录)
 
 ```bash
 fpt create <project-name> -t vue
@@ -37,6 +37,34 @@ fpt create <project-name> -t vue
 ```bash
 fpt create <project-name> -t springboot
 ```
+
+3. 初始化git仓库
+
+```bash
+git init
+```
+
+4. 推送项目到github
+
+```bash
+git add .
+git commit -m "init"
+git remote add origin <github-repo-url>
+git push -u origin main
+```
+
+5. 配置github仓库的secrets
+
+```
+仓库Settings -> Secrets and variables -> Actions -> New repository secret
+
+SERVER_IP=服务器IP
+SERVER_PORT=22
+SERVER_USER=服务器用户名
+SERVER_PASSWORD=服务器密码
+```
+
+6. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
 
 # 项目配置
 

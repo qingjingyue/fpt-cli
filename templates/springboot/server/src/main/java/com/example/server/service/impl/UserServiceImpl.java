@@ -1,25 +1,24 @@
 package com.example.server.service.impl;
 
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.common.constants.RedisConstant;
 import com.example.common.constants.RegexConstant;
 import com.example.common.exceptions.BizException;
 import com.example.common.properties.JwtProperties;
 import com.example.common.utils.JwtUtil;
-import com.example.domain.dto.AccountLoginDTO;
+import com.example.domain.dto.EmailLoginDTO;
 import com.example.domain.dto.PhoneLoginDTO;
 import com.example.domain.po.User;
 import com.example.domain.vo.UserInfoVO;
 import com.example.server.mapper.UserMapper;
+import com.example.server.service.SmsService;
 import com.example.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import static com.example.common.constants.MqConstant.Exchange.USER_EXCHANGE;
+import static com.example.common.constants.MqConstant.Key.USER_EMAIL_CODE_KEY;
 import static com.example.common.constants.MqConstant.Key.USER_PHONE_CODE_KEY;
 
 
@@ -29,54 +28,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final JwtProperties jwtProperties;
     private final RabbitTemplate rabbitTemplate;
-    private final StringRedisTemplate redisTemplate;
-
-
-    @Override
-    public void register(AccountLoginDTO userLoginDTO) {
-        User user = new User();
-        user.setUsername(userLoginDTO.getUsername());
-        // 密码加密,使用hutool的BCrypt加密（推荐使用强度 10）
-        String pw = BCrypt.hashpw(userLoginDTO.getPassword(), BCrypt.gensalt(10));
-        user.setPassword(pw);
-        save(user);
-    }
-
-    @Override
-    public UserInfoVO loginByAccount(AccountLoginDTO userLoginDTO) {
-        // 根据用户名查询用户
-        User user = lambdaQuery()
-                .eq(User::getUsername, userLoginDTO.getUsername())
-                .one();
-        // 判断用户是否存在
-        if (user == null) {
-            throw new BizException("用户名或密码错误");
-        }
-        // 判断密码是否正确
-        if (!BCrypt.checkpw(userLoginDTO.getPassword(), user.getPassword())) {
-            throw new BizException("用户名或密码错误");
-        }
-        // 生成JWT令牌
-        String token = JwtUtil.createJWT(user.getId(), jwtProperties);
-        // 返回用户信息
-        return UserInfoVO.builder()
-                .id(user.getId())
-                .avatar(user.getAvatar())
-                .username(user.getUsername())
-                .token(token)
-                .build();
-    }
+    private final SmsService smsService;
 
     @Override
     public UserInfoVO loginByPhone(PhoneLoginDTO phoneLoginDTO) {
         // 判断验证码是否正确
-        String key = RedisConstant.KeyPrefix.USER_PHONE_CODE_KEY_PREFIX + phoneLoginDTO.getPhone();
-        String code = redisTemplate.opsForValue().get(key);
-        if (code == null || !code.equals(phoneLoginDTO.getCode())) {
+        boolean verifyResult = smsService.CheckPhoneVerifyCode(phoneLoginDTO.getPhone(), phoneLoginDTO.getCode());
+        if (!verifyResult) {
             throw new BizException("手机号或验证码错误");
         }
-        // 清除验证码
-        redisTemplate.delete(key);
         // 根据手机号查询用户
         User user = lambdaQuery()
                 .eq(User::getPhone, phoneLoginDTO.getPhone())
@@ -101,12 +61,57 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void sendPhoneCode(String phone) {
-        // 效验手机号格式
-        if (!ReUtil.isMatch(RegexConstant.PHONE_PATTERN, phone)) {
-            throw new BizException("手机号格式错误");
+    public void sendVerifyCode(String type, String value) {
+        switch (type) {
+            case "phone":
+                // 效验手机号格式
+                if (!ReUtil.isMatch(RegexConstant.PHONE_PATTERN, value)) {
+                    throw new BizException("手机号格式错误");
+                }
+                // 发送MQ消息
+                rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, value);
+                break;
+            case "email":
+                // 效验邮箱格式
+                if (!ReUtil.isMatch(RegexConstant.EMAIL_PATTERN, value)) {
+                    throw new BizException("邮箱格式错误");
+                }
+                // 发送MQ消息
+                rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_EMAIL_CODE_KEY, value);
+                break;
+            default:
+                throw new BizException("不支持的验证码类型");
         }
-        // 发送MQ消息
-        rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, phone);
+
+    }
+
+    @Override
+    public UserInfoVO loginByEmail(EmailLoginDTO emailLoginDTO) {
+        // 判断验证码是否正确
+        boolean verifyResult = smsService.CheckEmailVerifyCode(emailLoginDTO.getEmail(), emailLoginDTO.getCode());
+        if (!verifyResult) {
+            throw new BizException("邮箱或验证码错误");
+        }
+        // 根据邮箱查询用户
+        User user = lambdaQuery()
+                .eq(User::getEmail, emailLoginDTO.getEmail())
+                .one();
+        // 判断用户是否存在
+        if (user == null) {
+            // 不存在则创建用户
+            user = new User();
+            user.setEmail(emailLoginDTO.getEmail());
+            user.setUsername(emailLoginDTO.getEmail());
+            save(user);
+        }
+        // 生成JWT令牌
+        String token = JwtUtil.createJWT(user.getId(), jwtProperties);
+        // 返回用户信息
+        return UserInfoVO.builder()
+                .id(user.getId())
+                .avatar(user.getAvatar())
+                .username(user.getUsername().substring(0, user.getUsername().indexOf("@")))
+                .token(token)
+                .build();
     }
 }

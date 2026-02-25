@@ -22,7 +22,10 @@
 		"fs-extra": "^11.3.3"
 	},
 	"devDependencies": {
-		"prettier": "^3.8.1"
+		"@eslint/js": "^10.0.1",
+		"eslint": "^9.37.0",
+		"globals": "^17.3.0",
+		"prettier": "3.6.2"
 	},
 	"engines": {
 		"node": ">=20.0.0"

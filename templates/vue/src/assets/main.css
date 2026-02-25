@@ -1,37 +1,38 @@
 /* 重置样式 */
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html {
-    height: 100%;
-    font-size: 14px;
+	height: 100%;
+	font-size: 14px;
 }
 
 /* 定义全局变量 */
+/* 主题为 light 时 */
 :root {
-    --font-color: #000000;
-    --bg-color: rgba(255, 255, 255, 0.3);
+	--font-color: #000000;
+	--bg-color: rgba(255, 255, 255, 0.3);
 }
-/* 主题为dark时 */
+/* 主题为 dark 时 */
 :root.dark {
-    --font-color: #ffffff;
-    --bg-color: rgba(0, 0, 0, 0.3);
+	--font-color: #ffffff;
+	--bg-color: rgba(0, 0, 0, 0.3);
 }
 
 body {
-    height: 100%;
-    color: var(--font-color);
-    font:
-        1em/1.4 'Microsoft Yahei',
-        'PingFang SC',
-        'Avenir',
-        'Segoe UI',
-        'Hiragino Sans GB',
-        'STHeiti',
-        'Microsoft Sans Serif',
-        'WenQuanYi Micro Hei',
-        sans-serif;
+	height: 100%;
+	color: var(--font-color);
+	font:
+		1em/1.4 'Microsoft Yahei',
+		'PingFang SC',
+		'Avenir',
+		'Segoe UI',
+		'Hiragino Sans GB',
+		'STHeiti',
+		'Microsoft Sans Serif',
+		'WenQuanYi Micro Hei',
+		sans-serif;
 }
 body,
 ul,
@@ -41,21 +42,18 @@ h4,
 p,
 dl,
 dd {
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
 }
 a {
-    text-decoration: none;
-    color: var(--font-color);
-    outline: none;
-}
-a:hover {
-    color: var(--el-color-primary);
+	text-decoration: none;
+	color: var(--font-color);
+	outline: none;
 }
 i {
-    font-style: normal;
+	font-style: normal;
 }
 
 ul {
-    list-style: none;
+	list-style: none;
 }

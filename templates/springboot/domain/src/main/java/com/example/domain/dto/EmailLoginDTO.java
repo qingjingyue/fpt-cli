@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "手机号登录请求参数")
-public class PhoneLoginDTO {
+@Schema(name = "邮箱登录请求参数")
+public class EmailLoginDTO {
 
-    @Schema(description = "手机号")
-    @NotBlank(message = "手机号不能为空")
-    @Pattern(regexp = RegexConstant.PHONE_PATTERN, message = "手机号格式错误")
-    private String phone;
+    @Schema(description = "邮箱")
+    @NotBlank(message = "邮箱不能为空")
+    @Pattern(regexp = RegexConstant.EMAIL_PATTERN, message = "邮箱格式错误")
+    private String email;
 
     @Schema(description = "验证码")
     @NotBlank(message = "验证码不能为空")

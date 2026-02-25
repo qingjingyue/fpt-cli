@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 @Data
 @AutoConfiguration
 @ConfigurationProperties(prefix = "example.aliyun")
-public class AliyunConfig {
+public class AliYunConfig {
 
     private String accessKeyId;
     private String accessKeySecret;

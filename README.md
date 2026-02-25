@@ -53,7 +53,7 @@ git remote add origin <github-repo-url>
 git push -u origin main
 ```
 
-5. 配置github仓库的secrets
+5. 配置github仓库的secrets (用于自动部署到服务器)
 
 ```
 仓库Settings -> Secrets and variables -> Actions -> New repository secret
@@ -64,7 +64,30 @@ SERVER_USER=服务器用户名
 SERVER_PASSWORD=服务器密码
 ```
 
-6. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
+6. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中. (用于发送手机号验证码)
+
+```bash
+# 设置阿里云AccessKey
+export ALIBABA_CLOUD_ACCESS_KEY_ID=你的AccessKeyID
+export ALIBABA_CLOUD_ACCESS_KEY_SECRET=你的AccessKeySecret
+# 验证是否配置成功
+echo $ALIBABA_CLOUD_ACCESS_KEY_ID
+echo $ALIBABA_CLOUD_ACCESS_KEY_SECRET
+```
+
+7. 准备一个邮箱 (用于发送邮箱验证码)
+
+```bash
+export MAIL_HOST=你的邮箱服务器
+export MAIL_USERNAME=你的邮箱
+export MAIL_PASSWORD=你的邮箱授权码
+# 验证是否配置成功
+echo $MAIL_HOST
+echo $MAIL_USERNAME
+echo $MAIL_PASSWORD
+```
+
+8. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
 
 # 项目配置
 

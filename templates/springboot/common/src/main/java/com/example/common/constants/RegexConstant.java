@@ -10,7 +10,7 @@ public interface RegexConstant {
     /**
      * 邮箱正则
      */
-    String EMAIL_PATTERN = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+    String EMAIL_PATTERN = "^[a-zA-Z0-9_%+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,}$";
 
     /**
      * 密码正则: 6~16位的字母、数字、下划线

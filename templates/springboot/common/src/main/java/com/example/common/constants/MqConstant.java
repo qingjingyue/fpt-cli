@@ -13,5 +13,6 @@ public interface MqConstant {
     interface Key {
         // 用户有关的路由键
         String USER_PHONE_CODE_KEY = "user.phone.code";
+        String USER_EMAIL_CODE_KEY = "user.email.code";
     }
 }

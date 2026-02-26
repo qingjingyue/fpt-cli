@@ -10,7 +10,6 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
 public class SendVerifyCodeListener {
 
     private final SmsService smsService;
-    private final StringRedisTemplate redisTemplate;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(name = "phone.code.queue", durable = "true"),

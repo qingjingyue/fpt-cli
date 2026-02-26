@@ -99,10 +99,12 @@ public class SmsServiceImpl implements SmsService {
         // 查缓存是否存在该验证码
         String key = RedisConstant.KeyPrefix.USER_EMAIL_KEY_PREFIX + email;
         String cacheCode = redisTemplate.opsForValue().get(key);
-        if (cacheCode == null) {
-            return false;
-        }
         // 校验验证码是否正确
-        return cacheCode.equals(code);
+        boolean verifyResult = code != null && code.equals(cacheCode);
+        if (verifyResult) {
+            // 校验成功后删除缓存
+            redisTemplate.delete(key);
+        }
+        return verifyResult;
     }
 }

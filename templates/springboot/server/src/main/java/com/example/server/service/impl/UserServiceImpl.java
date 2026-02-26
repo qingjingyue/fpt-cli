@@ -82,7 +82,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             default:
                 throw new BizException("不支持的验证码类型");
         }
-
     }
 
     @Override
@@ -101,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 不存在则创建用户
             user = new User();
             user.setEmail(emailLoginDTO.getEmail());
-            user.setUsername(emailLoginDTO.getEmail());
+            user.setUsername(emailLoginDTO.getEmail().substring(0, emailLoginDTO.getEmail().indexOf("@")));
             save(user);
         }
         // 生成JWT令牌
@@ -110,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return UserInfoVO.builder()
                 .id(user.getId())
                 .avatar(user.getAvatar())
-                .username(user.getUsername().substring(0, user.getUsername().indexOf("@")))
+                .username(user.getUsername())
                 .token(token)
                 .build();
     }

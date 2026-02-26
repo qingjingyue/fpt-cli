@@ -94,6 +94,7 @@ jobs:
                   username: ${{ secrets.SERVER_USER }}
                   password: ${{ secrets.SERVER_PASSWORD }}
                   script: |
+                      source ~/.profile
                       cd /root/workspace/
                       tar -xzvf example-server.tar.gz
                       cd example-server

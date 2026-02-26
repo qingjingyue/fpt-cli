@@ -4,10 +4,10 @@ example:
         production: true
     mysql:
         host: example-mysql
-        password: ${MYSQL_PASSWORD:-123456}
+        password: ${MYSQL_PASSWORD}
     redis:
         host: example-redis
-        password: ${REDIS_PASSWORD:-123456}
+        password: ${REDIS_PASSWORD}
     rabbitmq:
         host: example-rabbitmq
-        password: ${RABBITMQ_PASSWORD:-123456}
+        password: ${RABBITMQ_PASSWORD}

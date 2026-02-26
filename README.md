@@ -43,10 +43,6 @@ projectName/
 3. 创建项目
 
 ```bash
-fpt create web
-```
-
-```bash
 fpt create server
 ```
 
@@ -79,6 +75,7 @@ SERVER_PASSWORD=服务器密码
 7. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中 (用于发送手机号验证码)
 
 ```bash
+# ~/.profile
 # 设置阿里云AccessKey
 export ALIBABA_CLOUD_ACCESS_KEY_ID=你的AccessKeyID
 export ALIBABA_CLOUD_ACCESS_KEY_SECRET=你的AccessKeySecret
@@ -90,6 +87,7 @@ echo $ALIBABA_CLOUD_ACCESS_KEY_SECRET
 8. 准备一个邮箱 (用于发送邮箱验证码)
 
 ```bash
+# ~/.profile
 export MAIL_HOST=你的邮箱服务器
 export MAIL_USERNAME=你的邮箱
 export MAIL_PASSWORD=你的邮箱授权码
@@ -111,6 +109,10 @@ echo $MAIL_PASSWORD
    vue/
     ├── .vscode             # vscode 配置文件, 包含了常用的插件和设置
     ├── conf.d              # nginx 配置文件, 包含了项目的 nginx 配置
+    ├── env/                 # 环境变量配置文件目录
+    │   ├── .env.dev                # 开发环境配置文件
+    │   ├── .env.prod               # 生产环境配置文件
+    │   ├── env.d.ts                # 环境变量类型定义文件
     ├── public              # 包含favicon.ico
     ├── src/                # 项目源代码目录
     │   ├── apis                # 后端接口
@@ -123,10 +125,8 @@ echo $MAIL_PASSWORD
     │   ├── views               # 视图组件
     │   ├── App.vue
     │   ├── main.ts
-    ├── .env.dev                # 开发环境配置文件
-    ├── .env.prod               # 生产环境配置文件
-    ├── env.d.ts                # 环境变量类型定义文件
     ├── docker-compose.yml      # 用于 docker 部署, 搭配conf.d
+    ├── eslint.config.ts        # eslint 配置文件
     ├── index.html
     ├── package.json
     ├── pnpm-lock.yaml
@@ -137,8 +137,8 @@ echo $MAIL_PASSWORD
 ### 功能实现
 
 - 请求响应拦截器
-- 账号密码登录注册
 - 手机号验证码登录注册
+- 邮箱验证码登录注册
 - light - dark 主题切换
 
 ## springboot 模板
@@ -162,8 +162,8 @@ springboot/
 
 ### 功能实现
 
-- 账号密码登录注册
 - 手机号验证码登录注册
+- 邮箱验证码登录注册
 - JWT 认证
 - 全局异常处理
 - 统一响应体Result

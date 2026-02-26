@@ -1,18 +1,13 @@
+# 生产环境配置
 example:
-  mysql:
-    host: example-mysql
-    database: example
-    username: root
-    password: 123456
-  redis:
-    host: example-redis
-    password: 123456
-    port: 6379
-  rabbitmq:
-    host: example-rabbitmq
-    port: 5672
-    virtual-host: /
-    username: rabbitmq
-    password: rabbitmq
-  knife4j:
-    production: true
+    knife4j: # 关闭knife4j
+        production: true
+    mysql:
+        host: example-mysql
+        password: ${MYSQL_PASSWORD:-123456}
+    redis:
+        host: example-redis
+        password: ${REDIS_PASSWORD:-123456}
+    rabbitmq:
+        host: example-rabbitmq
+        password: ${RABBITMQ_PASSWORD:-123456}

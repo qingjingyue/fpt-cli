@@ -23,9 +23,9 @@ export default defineConfig({
 				ElementPlusResolver(),
 				// 自动导入图标组件
 				IconsResolver({
-					prefix: 'Icon',
-				}),
-			],
+					prefix: 'Icon'
+				})
+			]
 		}),
 		Components({
 			resolvers: [
@@ -33,20 +33,22 @@ export default defineConfig({
 				ElementPlusResolver(),
 				// 自动注册图标组件
 				IconsResolver({
-					enabledCollections: ['ep'],
-				}),
-			],
+					enabledCollections: ['ep']
+				})
+			]
 		}),
 		Icons({
-			autoInstall: true,
-		}),
+			autoInstall: true
+		})
 	],
 	resolve: {
 		// 路径别名配置
 		alias: {
-			'@': fileURLToPath(new URL('./src', import.meta.url)),
-		},
+			'@': fileURLToPath(new URL('./src', import.meta.url))
+		}
 	},
 	// 基础路径配置 (默认值: '/') (打包时的静态资源路径前缀)
 	base: '/', // Vite 会自动注入 import.meta.env.BASE_URL
+	// 环境变量目录
+	envDir: './env'
 })

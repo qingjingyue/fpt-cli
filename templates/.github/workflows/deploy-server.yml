@@ -1,5 +1,5 @@
 # 工作流名称
-name: Deploy Vue to Nginx
+name: Deploy Server to Jre
 
 # 触发条件
 on:
@@ -8,8 +8,8 @@ on:
             - main
             - master
         paths: # 当指定路径下的文件有变更时触发
-            - 'example/**'
-    workflow_dispatch: # 手动触发
+            - 'example-server/**'
+    workflow_dispatch: # 允许手动触发
 
 # 设置权限
 permissions:
@@ -28,50 +28,53 @@ jobs:
             - name: 拉取代码
               uses: actions/checkout@v6
 
-            - name: 安装 pnpm
-              uses: pnpm/action-setup@v3
+            - name: 安装 Java 和 Maven
+              uses: actions/setup-java@v5
               with:
-                  version: 10
+                  distribution: 'temurin'
+                  java-version: '21'
+                  cache: 'maven'
+                  cache-dependency-path: 'example-server/pom.xml'
 
-            - name: 安装依赖
+            - name: 下载依赖
               run: |
-                  cd ./example
-                  pnpm install
+                  cd example-server
+                  mvn compile
 
             - name: 构建项目
               run: |
-                  cd ./example
-                  pnpm build:prod
+                  cd example-server
+                  mvn clean package -DskipTests
 
             - name: 打包构建产物
               run: |
-                  cd ./example
-                  mkdir -p example
-                  mv ./dist/ ./example
-                  mv ./conf.d/ ./example
-                  mv ./docker-compose.yaml ./example
-                  tar -czvf example.tar.gz ./example
+                  cd example-server
+                  mv server/target/*.jar example-server.jar
+                  mkdir -p example-server
+                  mv example-server.jar example-server/
+                  mv sql/ example-server/
+                  mv docker-compose.yaml example-server/
+                  tar -czvf example-server.tar.gz ./example-server
 
             - name: 上传构建产物
               uses: actions/upload-artifact@v6
               with:
-                  name: example # 构建产物被上传后的名称
-                  path: ./example/example.tar.gz # 构建产物路径
+                  name: example-server # 构建产物被上传后的名称
+                  path: ./example-server/example-server.tar.gz # 构建产物路径
 
     # 任务名称 (部署)
     deploy:
         # 运行环境
         runs-on: ubuntu-latest
-        # 依赖任务
-        needs: build
+        needs: build # 依赖构建任务
 
         # 任务步骤
         steps:
             - name: 下载构建产物
               uses: actions/download-artifact@v6
               with:
-                  name: example
-                  path: .
+                  name: example-server # 与上传时的名称一致
+                  path: . # 下载到指定目录
 
             - name: 上传到服务器
               uses: appleboy/scp-action@v1.0.0
@@ -80,7 +83,7 @@ jobs:
                   port: ${{ secrets.SERVER_PORT }}
                   username: ${{ secrets.SERVER_USER }}
                   password: ${{ secrets.SERVER_PASSWORD }}
-                  source: example.tar.gz
+                  source: example-server.tar.gz
                   target: /root/workspace/
 
             - name: 部署
@@ -92,8 +95,7 @@ jobs:
                   password: ${{ secrets.SERVER_PASSWORD }}
                   script: |
                       cd /root/workspace/
-                      rm -rf example/dist
-                      tar -xzvf example.tar.gz
-                      cd example
-                      docker compose up -d nginx
-                      docker compose restart nginx
+                      tar -xzvf example-server.tar.gz
+                      cd example-server
+                      docker compose up -d app
+                      docker compose restart app

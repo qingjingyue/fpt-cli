@@ -1,18 +1,13 @@
+# 开发环境配置
 example:
-  mysql:
-    host: localhost
-    database: example
-    username: root
-    password: 123456
-  redis:
-    host: localhost
-    password: 123456
-    port: 6379
-  rabbitmq:
-    host: localhost
-    port: 5672
-    virtual-host: /
-    username: rabbitmq
-    password: rabbitmq
-  knife4j:
-    production: false
+    knife4j: # 开启knife4j
+        production: false
+    mysql:
+        host: localhost
+        password: 123456
+    redis:
+        host: localhost
+        password: 123456
+    rabbitmq:
+        host: localhost
+        password: 123456

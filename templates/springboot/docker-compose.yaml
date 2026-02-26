@@ -1,14 +1,14 @@
 version: '3.8'
 
 # volumes,networks 的 前缀
-name: example-prefix
+name: example
 
 # 需要的服务
 services:
     # 应用服务
     app:
         image: eclipse-temurin:21-jre-jammy
-        container_name: example-prefix-app
+        container_name: example-app
         ports:
             - '8080:8080'
         environment:
@@ -31,56 +31,56 @@ services:
             - redis
             - rabbitmq
         networks:
-            - example-prefix
+            - example
 
     # mysql数据库
     mysql:
         image: mysql:8.0
-        container_name: example-prefix-mysql
+        container_name: example-mysql
         ports:
             - '3306:3306'
         environment:
             - TZ=Asia/Shanghai
-            - MYSQL_ROOT_PASSWORD=123456
+            - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-123456}
         command:
             - '--default-time-zone=+08:00'
         volumes:
             - mysql-data:/var/lib/mysql # 挂载mysql数据目录
             - ./sql:/docker-entrypoint-initdb.d # 挂载mysql初始化脚本目录
         networks:
-            - example-prefix
+            - example
 
     # redis缓存
     redis:
         image: redis:8.0
-        container_name: example-prefix-redis
+        container_name: example-redis
         ports:
             - '6379:6379'
         environment:
             - TZ=Asia/Shanghai
-        command: redis-server --requirepass 123456
+        command: redis-server --requirepass ${REDIS_PASSWORD:-123456}
         volumes:
             - redis-data:/data # 挂载redis数据目录
         networks:
-            - example-prefix
+            - example
 
     # 消息队列
     rabbitmq:
         image: rabbitmq:3.8-management
-        container_name: example-prefix-rabbitmq
-        hostname: example-prefix-rabbitmq # 该容器的主机名
+        container_name: example-rabbitmq
+        hostname: example-rabbitmq # 该容器的主机名
         ports:
             - '5672:5672' # mq端口,用于收发消息
             - '15672:15672' # web控制台页面
         environment:
             - TZ=Asia/Shanghai
-            - RABBITMQ_DEFAULT_USER=rabbitmq
-            - RABBITMQ_DEFAULT_PASS=rabbitmq
+            - RABBITMQ_DEFAULT_USER=root
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-123456}
         volumes:
             - rabbitmq-data:/var/lib/rabbitmq # 挂载rabbitmq数据目录
             - rabbitmq-plugin:/plugins # 挂载rabbitmq插件目录
         networks:
-            - example-prefix
+            - example
 
 volumes:
     mysql-data:
@@ -89,4 +89,4 @@ volumes:
     rabbitmq-plugin:
 
 networks:
-    example-prefix:
+    example:

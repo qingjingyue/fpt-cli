@@ -1,11 +1,11 @@
 version: '3.8'
 
-name: example-prefix
+name: example
 
 services:
     nginx:
         image: nginx:1.25-alpine
-        container_name: example-prefix-nginx
+        container_name: example-nginx
         ports:
             - '80:80'
         volumes:
@@ -15,7 +15,7 @@ services:
         environment:
             - TZ=Asia/Shanghai
         networks:
-            - example-prefix
+            - example
 
 networks:
-    example-prefix:
+    example:

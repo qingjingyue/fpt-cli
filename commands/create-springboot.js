@@ -1,6 +1,5 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { getPrefix } from '../utils/StrUtil.js'
 
 // 定义排除目录和文件
 const excludeDirs = ['.idea', 'logs', 'target']
@@ -10,13 +9,17 @@ const renderFiles = ['docker-compose.yaml']
 
 /**
  * 构建模板创建SpringBoot项目
- * @param {string} name 项目名称
- * @param {string} templatePath 模板目录路径
- * @param {string} destPath 目标目录路径
+ * @param {string} cwdDir 当前目录
+ * @param {string} cwdDirName 项目名称
+ * @param {string} templateDir 模板目录路径
  */
-export function createSpringBootProject(name, templatePath, destPath) {
+export function createSpringBootProject(cwdDir, cwdDirName, templateDir) {
+	const name = cwdDirName
+	const templatePath = path.join(templateDir, 'springboot')
+	const destPath = path.join(cwdDir, cwdDirName + '-server')
+
 	// 递归,渲染模板文件
-	renderTemplates(templatePath, destPath, { name, prefix: getPrefix(name) })
+	renderTemplates(templatePath, destPath, { name })
 
 	// 渲染指定文件
 	renderFiles.forEach((file) => {
@@ -24,17 +27,15 @@ export function createSpringBootProject(name, templatePath, destPath) {
 		// 读取文件内容
 		const content = fs.readFileSync(templateFilePath, 'utf-8')
 		// 渲染文件内容
-		const renderedContent = content
-			.replaceAll('example-prefix', getPrefix(name))
-			.replaceAll('example', name)
+		const renderedContent = content.replaceAll('example', name)
 		// 写入渲染结果到目标文件
 		const destFilePath = path.join(destPath, file)
 		fs.writeFileSync(destFilePath, renderedContent)
 	})
 
-	// 准备路径   .github/workflows/deploy-spring.yml
-	const WorkflowPath = path.join(templatePath, '..', '.github/workflows/deploy-spring.yml')
-	const WorkflowDestPath = path.join(destPath, '..', '.github/workflows/deploy-spring.yml')
+	// 准备路径   .github/workflows/deploy-server.yml
+	const WorkflowPath = path.join(templatePath, '..', '.github/workflows/deploy-server.yml')
+	const WorkflowDestPath = path.join(destPath, '..', '.github/workflows/deploy-server.yml')
 	// 替换workflow文件中的项目名称 ('example' -> name)
 	const workflowContent = fs.readFileSync(WorkflowPath, 'utf-8')
 	const replacedWorkflowContent = workflowContent.replaceAll('example', name)
@@ -66,7 +67,7 @@ function renderTemplates(templatePath, destPath, data) {
 			}
 			// 检查是否为需要重命名的目录
 			if (file === 'example') {
-				file = data.prefix
+				file = data.name
 			}
 			// 构建目标子目录路径
 			const destSubDir = path.join(destPath, file)
@@ -79,8 +80,8 @@ function renderTemplates(templatePath, destPath, data) {
 			}
 			// 读取模板文件内容
 			const content = fs.readFileSync(templateFilePath, 'utf-8')
-			// 渲染模板内容 ('example' -> data.prefix)
-			const renderedResult = content.replaceAll('example', data.prefix)
+			// 渲染模板内容 ('example' -> data.name)
+			const renderedResult = content.replaceAll('example', data.name)
 			// 构建目标文件路径
 			const destFilePath = path.join(destPath, file)
 			// 写入渲染结果到文件

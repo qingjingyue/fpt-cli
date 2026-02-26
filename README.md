@@ -28,23 +28,35 @@
 npm install -g fpt-cli
 ```
 
-2. 创建项目 (准备好目录)
+2. 准备好项目目录
+
+```
+建议目录结构为:
+
+projectName/
+├── projectName-web      # 网页端
+├── projectName-mobile   # 移动端
+├── projectName-admin    # 后台管理
+├── projectName-server   # 后端
+```
+
+3. 创建项目
 
 ```bash
-fpt create <project-name> -t vue
+fpt create web
 ```
 
 ```bash
-fpt create <project-name> -t springboot
+fpt create server
 ```
 
-3. 初始化git仓库
+4. 初始化git仓库
 
 ```bash
 git init
 ```
 
-4. 推送项目到github
+5. 推送项目到github
 
 ```bash
 git add .
@@ -53,7 +65,7 @@ git remote add origin <github-repo-url>
 git push -u origin main
 ```
 
-5. 配置github仓库的secrets (用于自动部署到服务器)
+6. 配置github仓库的secrets (用于自动部署到服务器)
 
 ```
 仓库Settings -> Secrets and variables -> Actions -> New repository secret
@@ -64,7 +76,7 @@ SERVER_USER=服务器用户名
 SERVER_PASSWORD=服务器密码
 ```
 
-6. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中. (用于发送手机号验证码)
+7. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中 (用于发送手机号验证码)
 
 ```bash
 # 设置阿里云AccessKey
@@ -75,7 +87,7 @@ echo $ALIBABA_CLOUD_ACCESS_KEY_ID
 echo $ALIBABA_CLOUD_ACCESS_KEY_SECRET
 ```
 
-7. 准备一个邮箱 (用于发送邮箱验证码)
+8. 准备一个邮箱 (用于发送邮箱验证码)
 
 ```bash
 export MAIL_HOST=你的邮箱服务器
@@ -87,7 +99,7 @@ echo $MAIL_USERNAME
 echo $MAIL_PASSWORD
 ```
 
-8. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
+9. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
 
 # 项目配置
 
@@ -96,11 +108,11 @@ echo $MAIL_PASSWORD
 ### 目录结构
 
 ```
-   vue
+   vue/
     ├── .vscode             # vscode 配置文件, 包含了常用的插件和设置
     ├── conf.d              # nginx 配置文件, 包含了项目的 nginx 配置
     ├── public              # 包含favicon.ico
-    ├── src                 # 项目源代码目录
+    ├── src/                # 项目源代码目录
     │   ├── apis                # 后端接口
     │   ├── assets              # 静态资源
     │   ├── components          # 组件
@@ -134,11 +146,11 @@ echo $MAIL_PASSWORD
 ### 目录结构
 
 ```
-springboot
+springboot/
     ├── common                  # 公共模块, 包含了常用的类, 常量, 枚举, 异常, 拦截器, 工具类, 配置类, 自动配置等
     ├── domain                  # 领域模型模块, 包含了项目的实体类, dto, po, vo等
     ├── server                  # 服务模块, 包含了项目的controller, service, mapper, mq.listener等
-    │   ├── src/main/resources
+    │   ├── src/main/resources/
     │                   ├── application.yml          # 公共配置文件
     │                   ├── application-dev.yml      # 开发环境配置文件
     │                   ├── application-prod.yml     # 生产环境配置文件

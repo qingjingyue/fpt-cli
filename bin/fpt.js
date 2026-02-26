@@ -10,19 +10,10 @@ process.on('uncaughtException', (error) => {
 })
 
 // 定义 CLI 程序
-program
-	.name('fpt')
-	.description('快速创建项目')
-	.version('1.0.0')
+program.name('fpt').description('快速创建项目').version('1.0.0')
 
 // 创建项目命令
-program
-	.command('create <project-name>')
-	.description('创建一个新项目')
-	.requiredOption('-t, --template <template>', '使用指定模板')
-	.action(async (projectName, options) => {
-		await createCommand(projectName, options.template)
-	})
+program.command('create <endpoint>').description('创建一个项目的某一端').action(createCommand)
 
 // 解析命令行参数
 program.parse()

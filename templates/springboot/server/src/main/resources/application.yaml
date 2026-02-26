@@ -90,3 +90,6 @@ example:
     aliyun:
         accessKeyId: ${ALIBABA_CLOUD_ACCESS_KEY_ID}
         accessKeySecret: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET}
+    # 验证码配置
+    verify-code:
+        ttl: 5 # 有效时间, 单位: 分钟

@@ -15,20 +15,17 @@ process.on('uncaughtException', (error) => {
 program.name('fpt').description('快速创建项目').version('1.0.0')
 
 // 创建项目命令
-const createProgram = program
+program
 	.command('create')
 	.description('创建一个项目')
+	.option(
+		'--default',
+		'创建项目的 web,server 端,登录方式为 account,不使用 GitHub Actions 自动部署项目'
+	)
 	.option('-e, --endpoint <endpoint>', '要创建的端 {web,server}')
 	.option('--login-way <loginWay>', '登录方式 {account,phone,email}')
 	.option('--github-actions', '使用 GitHub Actions 自动部署项目')
 	.action(create)
-
-// createProgram.command('web').description('创建项目的 web 端').action(createWeb)
-
-// createProgram
-// 	.command('server')
-// 	.description('创建项目的 server 端')
-// 	.action(createServer)
 
 // 解析命令行参数
 program.parse()

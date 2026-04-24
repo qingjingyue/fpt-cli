@@ -14,7 +14,6 @@ public interface RedisConstant {
          * 邮箱验证码缓存key
          * <p>
          * string结构，key：邮箱，value：验证码
-         * 过期时间5分钟
          *
          * <table>
          *     <tr>

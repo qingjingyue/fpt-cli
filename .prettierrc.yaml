@@ -1,5 +1,5 @@
 # 每行代码最大长度
-printWidth: 100
+printWidth: 80
 
 # 缩进空格数
 tabWidth: 4

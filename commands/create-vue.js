@@ -29,7 +29,9 @@ export function createVueProject(cwdDir, cwdDirName, templateDir) {
 		// 过滤排除目录和文件
 		filter: (src, dest) => {
 			const isExcludeDir = excludeDirs.some((dir) => src.includes(dir))
-			const isExcludeFile = excludeFiles.some((file) => src.includes(file))
+			const isExcludeFile = excludeFiles.some((file) =>
+				src.includes(file)
+			)
 			return !isExcludeDir && !isExcludeFile
 		}
 	})
@@ -44,8 +46,16 @@ export function createVueProject(cwdDir, cwdDirName, templateDir) {
 		fs.writeFileSync(filePath, renderedContent)
 	})
 	// 准备路径   .github/workflows/deploy-web.yml
-	const WorkflowPath = path.join(templatePath, '..', '.github/workflows/deploy-web.yml')
-	const WorkflowDestPath = path.join(destPath, '..', '.github/workflows/deploy-web.yml')
+	const WorkflowPath = path.join(
+		templatePath,
+		'..',
+		'.github/workflows/deploy-web.yml'
+	)
+	const WorkflowDestPath = path.join(
+		destPath,
+		'..',
+		'.github/workflows/deploy-web.yml'
+	)
 	// 替换workflow文件中的项目名称 ('example' -> name)
 	const workflowContent = fs.readFileSync(WorkflowPath, 'utf-8')
 	const replacedWorkflowContent = workflowContent.replaceAll('example', name)

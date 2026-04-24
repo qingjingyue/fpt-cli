@@ -19,7 +19,7 @@ const createProgram = program
 	.command('create')
 	.description('创建一个项目')
 	.option('-e, --endpoint <endpoint>', '要创建的端 {web,server}')
-	.option('--login <loginWay>', '登录方式 {account,phone,email}')
+	.option('--login-way <loginWay>', '登录方式 {account,phone,email}')
 	.option('--github-actions', '使用 GitHub Actions 自动部署项目')
 	.action(create)
 

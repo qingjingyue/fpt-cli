@@ -2,8 +2,6 @@
 
 import { program } from 'commander'
 import { create } from '../commands/create.js'
-import { createWeb } from '../commands/create-web.js'
-import { createServer } from '../commands/create-server.js'
 
 // 捕获未处理的异常
 process.on('uncaughtException', (error) => {

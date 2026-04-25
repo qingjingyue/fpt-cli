@@ -40,7 +40,7 @@ const activeTab = ref('accountLogin')
 // 计算 clip-path 的 polygon 值（关键！）
 // 假设容器宽 W，高 H；斜线起点在 (0, H)，终点在 (W, slopeOffset * H)
 // → polygon(0 0, W 0, W {slopeOffset*100}% , 0 {100 - slopeOffset*100}%)
-const getClipPath = (side = 'left') => {
+const getClipPath = (side: string) => {
 	const offset = -2
 	if (side === 'left') {
 		// 左侧：保留左下到斜线以上的部分

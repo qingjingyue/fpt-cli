@@ -7,17 +7,17 @@ import { createServer } from './create-server.js'
  * 创建项目
  * @param {object} options 命令选项
  * @param {boolean} options.default 是否使用默认选项
- * @param {('web' | 'server' )[]} options.endpoint 要创建的端
- * @param {('account' | 'phone' | 'email')[]} options.loginWay 登录方式
+ * @param {string} options.endpoint 要创建的端
+ * @param {string} options.loginWay 登录方式
  * @param {boolean} options.githubActions 是否使用 GitHub Actions 自动部署项目
  */
 export async function create(options) {
 	// console.log(options)
 
 	// 效验项目目录名称
-	// if (!/^[a-z]+$/.test(Constants.cwdDirName)) {
-	// 	throw new Error('项目目录名称只能包含小写字母')
-	// }
+	if (!/^[a-z]+$/.test(Constants.cwdDirName)) {
+		throw new Error('项目目录名称只能包含小写字母')
+	}
 
 	// 处理默认情况
 	if (options.default) {
@@ -49,11 +49,18 @@ export async function create(options) {
 				default: ['web']
 			}
 		])
-		options.endpoint = endpointOptions.endpoint
-		if (options.endpoint.length == 0) {
-			options.endpoint = 'web'
-		} else if (options.endpoint.length == 2) {
-			options.endpoint = 'all'
+		switch (endpointOptions.endpoint.length) {
+			case 0:
+				options.endpoint = 'web'
+				break
+			case 1:
+				options.endpoint = endpointOptions.endpoint[0]
+				break
+			case 2:
+				options.endpoint = 'all'
+				break
+			default:
+				throw new Error('请选择要创建的端')
 		}
 	}
 

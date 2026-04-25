@@ -9,5 +9,5 @@ import { Constants } from '../utils/constants.js'
 export async function createServer(options) {
 	console.log('正在创建项目的 server 端......')
 
-	console.log(`项目${Constants.cwdDirName}-server创建成功`)
+	console.log(`项目${Constants.cmdDirName}-server创建成功`)
 }

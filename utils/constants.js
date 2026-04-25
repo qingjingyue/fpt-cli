@@ -10,7 +10,7 @@ export class Constants {
 	)
 
 	// 命令执行完整目录
-	static cwdDir = process.cwd()
+	static cmdDir = process.cwd()
 	// 命令执行目录名
-	static cwdDirName = path.basename(Constants.cwdDir)
+	static cmdDirName = path.basename(Constants.cmdDir)
 }

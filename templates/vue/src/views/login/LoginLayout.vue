@@ -8,13 +8,35 @@
 		<!-- 右侧图片区域 -->
 		<div class="panel right">
 			<div class="login-form">
-				<router-view></router-view>
+				<!-- 登录表单 -->
+				<div class="login-tabs">
+					<el-row>
+						<el-col :span="4">
+							<p style="font-size: 24px; font-weight: bold; margin-bottom: 20px">
+								登录
+							</p>
+						</el-col>
+					</el-row>
+					<el-tabs v-model="activeTab">
+						<AccountLogin />
+						<EmailLogin />
+						<PhoneLogin />
+					</el-tabs>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import AccountLogin from '@/views/login/AccountLogin.vue'
+import EmailLogin from '@/views/login/EmailLogin.vue'
+import PhoneLogin from '@/views/login/PhoneLogin.vue'
+
+// 定义登录选项卡
+const activeTab = ref('accountLogin')
+
 // 计算 clip-path 的 polygon 值（关键！）
 // 假设容器宽 W，高 H；斜线起点在 (0, H)，终点在 (W, slopeOffset * H)
 // → polygon(0 0, W 0, W {slopeOffset*100}% , 0 {100 - slopeOffset*100}%)
@@ -73,5 +95,11 @@ const getClipPath = (side = 'left') => {
 .login-form {
 	/* 内容向右偏 */
 	transform: translateX(80%);
+}
+
+.login-tabs {
+	width: 500px;
+	padding: 50px;
+	background-color: var(--bg-color);
 }
 </style>

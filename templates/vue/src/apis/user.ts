@@ -8,6 +8,11 @@ export const userApi = {
 		return http.post<UserInfoVO>('/user/login/account', data)
 	},
 
+	/// 账号注册接口
+	registerByAccount: (data: { account: string; password: string }) => {
+		return http.post<UserInfoVO>('/user/register/account', data)
+	},
+
 	/// 手机号登录接口
 	loginByPhone: (data: { phone: string; code: string }) => {
 		return http.post<UserInfoVO>('/user/login/phone', data)

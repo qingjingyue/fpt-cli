@@ -8,7 +8,6 @@ export const useUserStore = defineStore(
 	'user',
 	// 定义状态
 	() => {
-		// 导出才能持久化
 		const userInfo = ref<UserInfoVO>()
 
 		const getUserInfo = () => {
@@ -23,6 +22,7 @@ export const useUserStore = defineStore(
 			userInfo.value = undefined
 		}
 
+		// 导出才能持久化
 		return { userInfo, getUserInfo, setUserInfo, removeUserInfo }
 	},
 	// 开启数据持久化存储

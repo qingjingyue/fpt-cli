@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// 主题切换
+import { useThemeStore } from '@/stores'
+useThemeStore()
+</script>
 
 <template>
 	<div>

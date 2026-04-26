@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Sunny, Moon } from '@element-plus/icons-vue'
-import { useDark, useToggle } from '@vueuse/core'
 
 // 主题切换
-const isDark = useDark()
-const toggleTheme = useToggle(isDark)
+import { useThemeStore } from '@/stores'
+const themeStore = useThemeStore()
 
 // 登录状态
 import { useUserStore } from '@/stores'
@@ -67,10 +66,10 @@ const logout = () => {
 							</el-col>
 							<el-col span="auto">
 								<el-switch
-									v-model="isDark"
+									v-model="themeStore.theme"
 									:active-action-icon="Sunny"
 									:inactive-action-icon="Moon"
-									@change="toggleTheme"
+									@change="themeStore.toggleTheme"
 									style="--el-switch-on-color: gray; --el-switch-off-color: gray"
 								/>
 							</el-col>

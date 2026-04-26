@@ -6,4 +6,6 @@ const pinia = createPinia()
 pinia.use(persist)
 
 export * from './models/user'
+export * from './models/theme'
+
 export default pinia

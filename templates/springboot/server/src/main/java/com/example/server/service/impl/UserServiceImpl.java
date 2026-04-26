@@ -1,11 +1,13 @@
 package com.example.server.service.impl;
 
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.constants.RegexConstant;
 import com.example.common.exceptions.BizException;
 import com.example.common.properties.JwtProperties;
 import com.example.common.utils.JwtUtil;
+import com.example.domain.dto.AccountLoginDTO;
 import com.example.domain.dto.EmailLoginDTO;
 import com.example.domain.dto.PhoneLoginDTO;
 import com.example.domain.po.User;
@@ -112,5 +114,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .username(user.getUsername())
                 .token(token)
                 .build();
+    }
+
+    @Override
+    public UserInfoVO loginByAccount(AccountLoginDTO accountLoginDTO) {
+        // 根据用户名查询
+        User user = lambdaQuery()
+                .eq(User::getUsername, accountLoginDTO.getAccount())
+                .one();
+        // 判断用户是否存在
+        if (user == null) {
+            throw new BizException("用户名或密码错误");
+        }
+        // 判断密码是否正确
+        if (!DigestUtil.bcryptCheck(accountLoginDTO.getPassword(), user.getPassword())) {
+            throw new BizException("用户名或密码错误");
+        }
+        // 生成JWT令牌
+        String token = JwtUtil.createJWT(user.getId(), jwtProperties);
+        // 返回用户信息
+        return UserInfoVO.builder()
+                .id(user.getId())
+                .avatar(user.getAvatar())
+                .username(user.getUsername())
+                .token(token)
+                .build();
+    }
+
+    @Override
+    public void registerByAccount(AccountLoginDTO accountLoginDTO) {
+        // 根据用户名查询
+        User user = lambdaQuery()
+                .eq(User::getUsername, accountLoginDTO.getAccount())
+                .one();
+        // 判断用户是否存在
+        if (user != null) {
+            throw new BizException("用户名重复");
+        }
+        // 不存在则创建用户
+        user = new User();
+        user.setUsername(accountLoginDTO.getAccount());
+        // 密码加密
+        String password = DigestUtil.bcrypt(accountLoginDTO.getPassword());
+        user.setPassword(password);
+        save(user);
     }
 }

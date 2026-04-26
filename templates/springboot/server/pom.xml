@@ -34,6 +34,11 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!--Hutool 工具包  加密解密-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
         <!--Spring-Boot-Web模块-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

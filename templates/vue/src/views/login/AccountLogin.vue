@@ -126,8 +126,7 @@ const register = async () => {
 		clearTimeout(timer)
 	}, 2000)
 	const { account, password } = registerForm.value
-	const res = await userApi.registerByAccount({ account, password })
-	useUserStore().setUserInfo(res)
+	await userApi.registerByAccount({ account, password })
 	// 注册提交loading状态
 	isRegisterLoading.value = false
 	// 提示注册成功

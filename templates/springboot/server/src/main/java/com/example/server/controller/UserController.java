@@ -2,6 +2,7 @@ package com.example.server.controller;
 
 
 import com.example.common.result.Result;
+import com.example.domain.dto.AccountLoginDTO;
 import com.example.domain.dto.EmailLoginDTO;
 import com.example.domain.dto.PhoneLoginDTO;
 import com.example.domain.vo.UserInfoVO;
@@ -41,5 +42,19 @@ public class UserController {
     public Result<UserInfoVO> loginByEmail(@Valid @RequestBody EmailLoginDTO emailLoginDTO) {
         UserInfoVO userInfoVO = userService.loginByEmail(emailLoginDTO);
         return Result.success(userInfoVO);
+    }
+
+    @Operation(summary = "账号密码登录")
+    @PostMapping("/login/account")
+    public Result<UserInfoVO> loginByAccount(@Valid @RequestBody AccountLoginDTO accountLoginDTO) {
+        UserInfoVO userInfoVO = userService.loginByAccount(accountLoginDTO);
+        return Result.success(userInfoVO);
+    }
+
+    @Operation(summary = "账号密码注册")
+    @PostMapping("/register/account")
+    public Result<Void> registerByAccount(@Valid @RequestBody AccountLoginDTO accountLoginDTO) {
+        userService.registerByAccount(accountLoginDTO);
+        return Result.success();
     }
 }

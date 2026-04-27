@@ -3,21 +3,20 @@ package com.example.common.autoconfig;
 
 import com.aliyun.dypnsapi20170525.Client;
 import com.aliyun.teaopenapi.models.Config;
-import lombok.Data;
+import com.example.common.properties.AliYunProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 
 @Slf4j
-@Data
 @AutoConfiguration
-@ConfigurationProperties(prefix = "example.aliyun")
+@ConditionalOnClass(Client.class)
+@RequiredArgsConstructor
 public class AliYunConfig {
 
-    private String accessKeyId;
-    private String accessKeySecret;
-
+    private final AliYunProperties aliyunProperties;
 
     /**
      * 初始化 alibaba 的 号码认证服务 的 客户端
@@ -29,8 +28,8 @@ public class AliYunConfig {
         // 配置凭据
         com.aliyun.credentials.models.Config credentialConfig = new com.aliyun.credentials.models.Config();
         credentialConfig.setType("access_key");
-        credentialConfig.setAccessKeyId(accessKeyId);
-        credentialConfig.setAccessKeySecret(accessKeySecret);
+        credentialConfig.setAccessKeyId(aliyunProperties.getAccessKeyId());
+        credentialConfig.setAccessKeySecret(aliyunProperties.getAccessKeySecret());
         // 得到 凭据客户端
         com.aliyun.credentials.Client credentialClient = new com.aliyun.credentials.Client(credentialConfig);
         // 使用凭据得到客户端配置

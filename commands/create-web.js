@@ -11,7 +11,7 @@ const loginWayMap = {
 const loginLayoutPath = path.join('src', 'views', 'login', 'LoginLayout.vue')
 
 // 与GitHub Actions有关的内容
-const githubActionslist = [
+const githubActionsList = [
 	path.join('conf.d', 'default.conf'),
 	'docker-compose.yaml'
 ]
@@ -26,7 +26,7 @@ const excludeFiles = [
 	'auto-imports.d.ts',
 	'components.d.ts',
 	...Object.values(loginWayMap),
-	...githubActionslist,
+	...githubActionsList,
 	...renderFiles
 ]
 
@@ -108,7 +108,7 @@ export async function createWeb(options) {
 
 	// 处理GitHub Actions 相关文件
 	if (options.githubActions) {
-		for (const file of githubActionslist) {
+		for (const file of githubActionsList) {
 			const templateFilePath = path.join(templatePath, file)
 			const destFilePath = path.join(destPath, file)
 			// 读取模板文件内容

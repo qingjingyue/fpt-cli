@@ -16,12 +16,7 @@ import com.example.server.mapper.UserMapper;
 import com.example.server.service.SmsService;
 import com.example.server.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-
-import static com.example.common.constants.MqConstant.Exchange.USER_EXCHANGE;
-import static com.example.common.constants.MqConstant.Key.USER_EMAIL_CODE_KEY;
-import static com.example.common.constants.MqConstant.Key.USER_PHONE_CODE_KEY;
 
 
 @Service
@@ -29,7 +24,7 @@ import static com.example.common.constants.MqConstant.Key.USER_PHONE_CODE_KEY;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final JwtProperties jwtProperties;
-    private final RabbitTemplate rabbitTemplate;
+    // private final RabbitTemplate rabbitTemplate;
     private final SmsService smsService;
 
     @Override
@@ -71,7 +66,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     throw new BizException("手机号格式错误");
                 }
                 // 发送MQ消息
-                rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, value);
+                // rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, value);
+                // 发送短信验证码
+                smsService.sendPhoneVerifyCode(value);
                 break;
             case "email":
                 // 效验邮箱格式
@@ -79,7 +76,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     throw new BizException("邮箱格式错误");
                 }
                 // 发送MQ消息
-                rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_EMAIL_CODE_KEY, value);
+                // rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_EMAIL_CODE_KEY, value);
+                // 发送邮箱验证码
+                smsService.sendEmailVerifyCode(value);
                 break;
             default:
                 throw new BizException("不支持的验证码类型");

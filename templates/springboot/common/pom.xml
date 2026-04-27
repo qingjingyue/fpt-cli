@@ -39,10 +39,15 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope> <!--provided: 编译时需要，运行时不需要, 不参与打包-->
         </dependency>
-        <!--hutool工具包-->
+        <!--hutool工具包  JWT-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-jwt</artifactId>
+        </dependency>
+        <!--Hutool 工具包  缓存-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-cache</artifactId>
         </dependency>
         <!-- Spring Boot 自动配置依赖 -->
         <dependency>

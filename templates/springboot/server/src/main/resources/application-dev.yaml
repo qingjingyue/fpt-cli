@@ -1,13 +1,13 @@
 # 开发环境配置
 example:
-    knife4j: # 开启knife4j
-        production: false
-    mysql:
-        host: localhost
-        password: 123456
-    redis:
-        host: localhost
-        password: 123456
-    rabbitmq:
-        host: localhost
-        password: 123456
+  knife4j: # 开启knife4j
+    production: false
+  mysql:
+    host: localhost
+    password: 123456
+#    redis:
+#        host: localhost
+#        password: 123456
+#    rabbitmq:
+#        host: localhost
+#        password: 123456

@@ -10,7 +10,7 @@ export const userApi = {
 
 	/// 账号注册接口
 	registerByAccount: (data: { account: string; password: string }) => {
-		return http.post<UserInfoVO>('/user/register/account', data)
+		return http.post<void>('/user/register/account', data)
 	},
 
 	/// 手机号登录接口

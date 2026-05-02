@@ -4,9 +4,18 @@ import path from 'path'
 
 // 与登录方式有关的内容
 const loginWayMap = {
-	account: path.join('src', 'views', 'login', 'AccountLogin.vue'),
-	phone: path.join('src', 'views', 'login', 'PhoneLogin.vue'),
-	email: path.join('src', 'views', 'login', 'EmailLogin.vue')
+	account: {
+		path: path.join('src', 'views', 'login', 'AccountLogin.vue'),
+		name: 'AccountLogin'
+	},
+	phone: {
+		path: path.join('src', 'views', 'login', 'PhoneLogin.vue'),
+		name: 'PhoneLogin'
+	},
+	email: {
+		path: path.join('src', 'views', 'login', 'EmailLogin.vue'),
+		name: 'EmailLogin'
+	}
 }
 const loginLayoutPath = path.join('src', 'views', 'login', 'LoginLayout.vue')
 
@@ -20,12 +29,13 @@ const deployFilePath = path.join('.github', 'workflows', 'deploy-web.yml')
 // 定义需要渲染的文件
 const renderFiles = [path.join('env', '.env'), 'index.html', 'package.json']
 
-// 定义排除目录和文件
+// 定义排除目录
 const excludeDirs = ['.vscode', 'node_modules', 'dist', 'conf.d']
+// 定义排除文件
 const excludeFiles = [
 	'auto-imports.d.ts',
 	'components.d.ts',
-	...Object.values(loginWayMap),
+	...Object.values(loginWayMap).map((item) => item.path),
 	...githubActionsList,
 	...renderFiles
 ]
@@ -40,10 +50,17 @@ const destPath = path.join(Constants.cmdDir, Constants.cmdDirName + '-web')
 /**
  * 创建项目的 web 端
  * @param {Object} options 选项对象
- * @param {('account' | 'phone' | 'email')[]} options.loginWay 登录方式
+ * @param {Object} options.loginWay 登录方式
+ * @param {boolean} options.loginWay.account
+ * @param {boolean} options.loginWay.phone
+ * @param {boolean} options.loginWay.email
  * @param {boolean} options.githubActions 是否使用 GitHub Actions 自动部署项目
  */
 export async function createWeb(options) {
+	if (fs.pathExistsSync(destPath)) {
+		console.log(`项目${Constants.cmdDirName}-web存在,取消创建`)
+		return
+	}
 	console.log('正在创建项目的 web 端......')
 
 	// 复制模板目录到目标目录
@@ -72,37 +89,30 @@ export async function createWeb(options) {
 	})
 
 	// 处理登录方式相关文件
-	for (const loginWay of options.loginWay) {
+	for (const [key, value] of Object.entries(options.loginWay)) {
+		if (!value) continue
 		// 模板登录方式文件路径
 		const templateLoginWayPath = path.join(
 			templatePath,
-			loginWayMap[loginWay]
+			loginWayMap[key].path
 		)
 		// 目标登录方式文件路径
-		const destLoginWayPath = path.join(destPath, loginWayMap[loginWay])
+		const destLoginWayPath = path.join(destPath, loginWayMap[key].path)
 		fs.copyFileSync(templateLoginWayPath, destLoginWayPath)
 	}
 	// 处理登录布局文件
-	if (options.loginWay.length !== Object.keys(loginWayMap).length) {
+	if (Object.values(options.loginWay).includes(false)) {
 		const destLoginLayoutPath = path.join(destPath, loginLayoutPath)
 		let content = fs.readFileSync(destLoginLayoutPath, 'utf-8')
-		const loginWays = Object.keys(loginWayMap).filter(
-			(item) => !options.loginWay.includes(item)
-		)
-		const map = {
-			account: 'AccountLogin',
-			phone: 'PhoneLogin',
-			email: 'EmailLogin'
-		}
-		for (const loginWay of loginWays) {
+		for (const [key, value] of Object.entries(options.loginWay)) {
+			if (value) continue
 			content = content
-				.replaceAll(`<${map[loginWay]} />`, '')
+				.replaceAll(`<${loginWayMap[key].name} />`, '')
 				.replaceAll(
-					`import ${map[loginWay]} from '@/views/login/${map[loginWay]}.vue'`,
+					`import ${loginWayMap[key].name} from '@/views/login/${loginWayMap[key].name}.vue'`,
 					''
 				)
 		}
-
 		fs.writeFileSync(destLoginLayoutPath, content)
 	}
 

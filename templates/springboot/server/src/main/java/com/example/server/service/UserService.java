@@ -10,9 +10,9 @@ import com.example.domain.vo.UserInfoVO;
 public interface UserService extends IService<User> {
 
 
-    UserInfoVO loginByPhone(PhoneLoginDTO phoneLoginDTO);
-
     void sendVerifyCode(String type, String value);
+
+    UserInfoVO loginByPhone(PhoneLoginDTO phoneLoginDTO);
 
     UserInfoVO loginByEmail(EmailLoginDTO emailLoginDTO);
 

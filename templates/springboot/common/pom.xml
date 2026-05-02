@@ -97,6 +97,11 @@
             <groupId>com.aliyun</groupId>
             <artifactId>dypnsapi20170525</artifactId>
         </dependency>
+        <!-- 邮件发送的核心依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -13,9 +13,12 @@ import com.example.domain.dto.PhoneLoginDTO;
 import com.example.domain.po.User;
 import com.example.domain.vo.UserInfoVO;
 import com.example.server.mapper.UserMapper;
+import com.example.server.mq.event.SendEmailVerifyCodeEvent;
+import com.example.server.mq.event.SendPhoneVerifyCodeEvent;
 import com.example.server.service.SmsService;
 import com.example.server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 
@@ -24,8 +27,32 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final JwtProperties jwtProperties;
-    // private final RabbitTemplate rabbitTemplate;
+    private final ApplicationEventPublisher eventPublisher;
     private final SmsService smsService;
+
+    @Override
+    public void sendVerifyCode(String type, String value) {
+        switch (type) {
+            case "phone":
+                // 效验手机号格式
+                if (!ReUtil.isMatch(RegexConstant.PHONE_PATTERN, value)) {
+                    throw new BizException("手机号格式错误");
+                }
+                // 发送MQ消息
+                eventPublisher.publishEvent(new SendPhoneVerifyCodeEvent(value));
+                break;
+            case "email":
+                // 效验邮箱格式
+                if (!ReUtil.isMatch(RegexConstant.EMAIL_PATTERN, value)) {
+                    throw new BizException("邮箱格式错误");
+                }
+                // 发送MQ消息
+                eventPublisher.publishEvent(new SendEmailVerifyCodeEvent(value));
+                break;
+            default:
+                throw new BizException("不支持的验证码类型");
+        }
+    }
 
     @Override
     public UserInfoVO loginByPhone(PhoneLoginDTO phoneLoginDTO) {
@@ -55,34 +82,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .username(user.getUsername())
                 .token(token)
                 .build();
-    }
-
-    @Override
-    public void sendVerifyCode(String type, String value) {
-        switch (type) {
-            case "phone":
-                // 效验手机号格式
-                if (!ReUtil.isMatch(RegexConstant.PHONE_PATTERN, value)) {
-                    throw new BizException("手机号格式错误");
-                }
-                // 发送MQ消息
-                // rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_PHONE_CODE_KEY, value);
-                // 发送短信验证码
-                smsService.sendPhoneVerifyCode(value);
-                break;
-            case "email":
-                // 效验邮箱格式
-                if (!ReUtil.isMatch(RegexConstant.EMAIL_PATTERN, value)) {
-                    throw new BizException("邮箱格式错误");
-                }
-                // 发送MQ消息
-                // rabbitTemplate.convertAndSend(USER_EXCHANGE, USER_EMAIL_CODE_KEY, value);
-                // 发送邮箱验证码
-                smsService.sendEmailVerifyCode(value);
-                break;
-            default:
-                throw new BizException("不支持的验证码类型");
-        }
     }
 
     @Override

@@ -15,14 +15,18 @@ export async function create(options) {
 	// console.log(options)
 
 	// 效验项目目录名称
-	if (!/^[a-z]+$/.test(Constants.cwdDirName)) {
+	if (!/^[a-z]+$/.test(Constants.cmdDirName)) {
 		throw new Error('项目目录名称只能包含小写字母')
 	}
 
 	// 处理默认情况
 	if (options.default) {
 		options.endpoint = 'all'
-		options.loginWay = ['account']
+		options.loginWay = {
+			account: true,
+			phone: false,
+			email: false
+		}
 		options.githubActions = false
 	}
 
@@ -92,10 +96,16 @@ export async function create(options) {
 				default: ['account']
 			}
 		])
-		options.loginWay = loginOptions.loginWay
-		if (options.loginWay.length == 0) {
-			options.loginWay = ['account']
+		// array -> map
+		const loginWays = {
+			account: false,
+			phone: false,
+			email: false
 		}
+		for (const login of loginOptions.loginWay) {
+			loginWays[login] = true
+		}
+		options.loginWay = loginWays
 	}
 
 	// 处理是否使用 GitHub Actions 自动部署项目
@@ -114,14 +124,14 @@ export async function create(options) {
 	// 解析选项
 	switch (options.endpoint) {
 		case 'web':
-			createWeb(options)
+			await createWeb(options)
 			break
 		case 'server':
-			createServer(options)
+			await createServer(options)
 			break
 		case 'all':
-			createWeb(options)
-			createServer(options)
+			await createWeb(options)
+			await createServer(options)
 			break
 		default:
 			throw new Error(`不支持的端: ${options.endpoint}`)

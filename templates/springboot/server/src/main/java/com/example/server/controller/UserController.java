@@ -39,6 +39,12 @@ public class UserController {
     @Operation(summary = "获取验证码")
     @GetMapping("/login/code")
     public Result<Void> getVerifyCode(@RequestParam("type") String type, @RequestParam("value") String value) {
+        if (!wayProperties.isPhone() && "phone".equals(type)) {
+            throw new BizException("当前登录方式未开启");
+        }
+        if (!wayProperties.isEmail() && "email".equals(type)) {
+            throw new BizException("当前登录方式未开启");
+        }
         userService.sendVerifyCode(type, value);
         return Result.success();
     }

@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -27,14 +26,12 @@ import java.util.concurrent.TimeUnit;
 public class SmsServiceImpl implements SmsService {
 
     private final Client phoneAuthClient;
-    // private final StringRedisTemplate redisTemplate;
     private final JavaMailSender mailSender;
     private final LoginProperties.VerifyCodeProperties verifyCodeProperties;
     @Value("${spring.mail.username}")
     private String from;
 
     @Override
-    @Async
     public void sendPhoneVerifyCode(String phone) {
         // 构造请求 (可参考 https://api.aliyun.com/document/Dypnsapi/2017-05-25/SendSmsVerifyCode)
         SendSmsVerifyCodeRequest request = new SendSmsVerifyCodeRequest()
@@ -81,7 +78,6 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    @Async
     public void sendEmailVerifyCode(String email) {
         // 生成6位随机数字验证码
         String code = RandomUtil.randomNumbers(6);

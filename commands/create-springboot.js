@@ -34,8 +34,16 @@ export function createSpringBootProject(cwdDir, cwdDirName, templateDir) {
 	})
 
 	// 准备路径   .github/workflows/deploy-server.yml
-	const WorkflowPath = path.join(templatePath, '..', '.github/workflows/deploy-server.yml')
-	const WorkflowDestPath = path.join(destPath, '..', '.github/workflows/deploy-server.yml')
+	const WorkflowPath = path.join(
+		templatePath,
+		'..',
+		'.github/workflows/deploy-server.yml'
+	)
+	const WorkflowDestPath = path.join(
+		destPath,
+		'..',
+		'.github/workflows/deploy-server.yml'
+	)
 	// 替换workflow文件中的项目名称 ('example' -> name)
 	const workflowContent = fs.readFileSync(WorkflowPath, 'utf-8')
 	const replacedWorkflowContent = workflowContent.replaceAll('example', name)

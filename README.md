@@ -12,13 +12,14 @@
     - 状态管理 pinia
     - 网络请求 axios
     - 组件库 element-plus
-    - nginx
 
 - springboot3.5 + java21
     - 构建工具 maven
     - 数据库 mysql + mybatis-plus
-    - 缓存 redis
-    - 消息队列 rabbitmq
+    - 缓存 hutool-cache
+    - 发布订阅 ApplicationEventPublisher
+
+---
 
 # 使用方法
 
@@ -34,34 +35,50 @@ npm install -g fpt-cli
 建议目录结构为:
 
 projectName/
+├── .github              # github actions
 ├── projectName-web      # 网页端
-├── projectName-mobile   # 移动端
-├── projectName-admin    # 后台管理
 ├── projectName-server   # 后端
 ```
 
 3. 创建项目
 
 ```bash
-fpt create server
+# 创建项目的 网页端,服务端,登录方式为 用户名密码登录,不使用 GitHub Actions 自动部署项目
+fpt create --default
+```
+或
+
+```bash
+fpt create
+
+? 请选择要创建的端: (↑/↓ 切换, 空格选择, a 全选, 回车确认)
+❯◉ 网页端
+ ◯ 服务端
+ 
+? 请选择登录方式: (↑/↓ 切换, 空格选择, a 全选, 回车确认)
+❯◉ 用户名密码登录
+ ◯ 手机号登录
+ ◯ 邮箱登录
+
+? 是否使用 GitHub Actions 自动部署项目？ (y/N)
 ```
 
-4. 初始化git仓库
+4. 初始化git仓库 (可选)
 
 ```bash
 git init
 ```
 
-5. 推送项目到github
+5. 推送项目到github (可选)
 
 ```bash
 git add .
 git commit -m "init"
-git remote add origin <github-repo-url>
+git remote add origin <你的远程仓库地址>
 git push -u origin main
 ```
 
-6. 配置github仓库的secrets (用于自动部署到服务器)
+6. 配置github仓库的secrets (用于自动部署到服务器) (可选)
 
 ```
 仓库Settings -> Secrets and variables -> Actions -> New repository secret
@@ -72,7 +89,7 @@ SERVER_USER=服务器用户名
 SERVER_PASSWORD=服务器密码
 ```
 
-7. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中 (用于发送手机号验证码)
+7. 前往阿里云申请AccessKey, 并配置到服务器的环境变量中 (用于发送手机号验证码) (可选)
 
 ```bash
 # ~/.profile
@@ -84,7 +101,7 @@ echo $ALIBABA_CLOUD_ACCESS_KEY_ID
 echo $ALIBABA_CLOUD_ACCESS_KEY_SECRET
 ```
 
-8. 准备一个邮箱 (用于发送邮箱验证码)
+8. 准备一个邮箱 (用于发送邮箱验证码) (可选)
 
 ```bash
 # ~/.profile
@@ -97,7 +114,10 @@ echo $MAIL_USERNAME
 echo $MAIL_PASSWORD
 ```
 
-9. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.
+9. 业务逻辑开发..., git提交代码到github仓库, 触发github actions, 自动构建和部署到服务器.  
+
+
+---
 
 # 项目配置
 
@@ -134,12 +154,21 @@ echo $MAIL_PASSWORD
     ├── vite.config.ts
 ```
 
+---
+
 ### 功能实现
 
-- 请求响应拦截器
+
+![首页](./assets/index.png)
+- light - dark 主题切换
+- 实现菜单切换,可根据具体内容填充页面
+
+![登录](./assets/login-page.png)
+- 登录页面图片可切换,登录方式可选
+- 用户名密码登录注册
 - 手机号验证码登录注册
 - 邮箱验证码登录注册
-- light - dark 主题切换
+---
 
 ## springboot 模板
 
@@ -162,9 +191,12 @@ springboot/
 
 ### 功能实现
 
+- 用户名密码登录注册
 - 手机号验证码登录注册
 - 邮箱验证码登录注册
 - JWT 认证
 - 全局异常处理
 - 统一响应体Result
 - Knife4j 接口文档
+
+---

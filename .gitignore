@@ -15,9 +15,9 @@ coverage
 *.local
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+.vscode
 .idea
+target
 *.suo
 *.ntvs*
 *.njsproj
@@ -34,4 +34,5 @@ coverage
 
 # Vitest
 __screenshots__/
-package.json.example
+
+test

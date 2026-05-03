@@ -1,17 +1,13 @@
 {
 	"name": "fpt-cli",
 	"version": "1.0.0",
-	"description": "fpt-cli",
-	"main": "index.js",
+	"description": "快速创建项目的脚手架",
+	"main": "./bin/fpt.js",
 	"type": "module",
 	"bin": {
 		"fpt": "./bin/fpt.js"
 	},
-	"scripts": {
-		"format": "prettier --write \"**/*.{js,json,md}\"",
-		"format:check": "prettier --check \"**/*.{js,json,md}\"",
-		"format:watch": "prettier --write \"**/*.{js,json,md}\" --watch"
-	},
+	"scripts": {},
 	"keywords": [
 		"fpt",
 		"cli"
@@ -29,19 +25,24 @@
 		"prettier": "3.6.2"
 	},
 	"engines": {
-		"node": ">=20.0.0"
+		"node": ">=22.0.0"
 	},
-	"packageManager": "pnpm@10.11.0",
-	"files": [
-		"bin",
-		"commands",
-		"utils",
-		"templates",
-		"package.json",
-		"README.md"
-	],
 	"repository": {
 		"type": "git",
-		"url": ""
-	}
+		"url": "https://github.com/qingjingyue/fpt-cli"
+	},
+	"files": [
+		"assets",
+		"bin",
+		"commands",
+		"templates",
+		"!templates/springboot/.idea",
+		"!templates/springboot/logs",
+		"!templates/springboot/common/target",
+		"!templates/springboot/domain/target",
+		"!templates/springboot/server/target",
+		"!templates/vue/.vscode",
+		"!templates/vue/node_modules",
+		"utils"
+	]
 }

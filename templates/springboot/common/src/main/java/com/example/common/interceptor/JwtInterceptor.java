@@ -44,6 +44,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             // 不通过，响应 401
             log.error("jwt校验失败");
             response.setStatus(401);
+            response.getWriter().write("jwt校验失败");
+            response.getWriter().flush();
             return false;
         }
     }

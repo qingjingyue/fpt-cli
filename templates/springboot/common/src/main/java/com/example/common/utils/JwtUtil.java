@@ -1,8 +1,11 @@
 package com.example.common.utils;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.JWTValidator;
 import com.example.common.exceptions.BizException;
 import com.example.common.properties.JwtProperties;
 
@@ -48,17 +51,18 @@ public class JwtUtil {
         // 验证Token签名是否有效
         boolean isValid = JWTUtil.verify(token, secretKey);
         if (!isValid) {
-            throw new BizException("请重新登录");
+            throw new BizException("token无效");
+        }
+        // 验证Token是否过期
+        try {
+            JWTValidator.of(token).validateDate(DateUtil.date());
+        } catch (ValidateException e) {
+            throw new BizException("token已过期");
         }
         // 解析JWT令牌
         JWT jwt = JWTUtil.parseToken(token);
-        // 验证Token是否过期
-        boolean isNotExpired = jwt.validate(0);
-        if (!isNotExpired) {
-            throw new BizException("请重新登录");
-        }
         // 从Payload中提取userId
-        return (Long) jwt.getPayload("userId");
+        return Long.valueOf(jwt.getPayload("userId").toString());
     }
 
 }

@@ -7,7 +7,10 @@
 	"bin": {
 		"fpt": "./bin/fpt.js"
 	},
-	"scripts": {},
+	"scripts": {
+		"dev-web": "cd templates/vue && pnpm dev",
+		"dev-server": "cd templates/springboot && mvn compile install && mvn spring-boot:run -pl server"
+	},
 	"keywords": [
 		"fpt",
 		"cli"

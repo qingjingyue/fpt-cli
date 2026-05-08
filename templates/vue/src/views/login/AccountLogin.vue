@@ -180,7 +180,7 @@ const accountLogin = async () => {
 	// 提示登录成功
 	ElMessage.success('登录成功')
 	// 跳转首页
-	router.push('/')
+	await router.push('/')
 }
 </script>
 

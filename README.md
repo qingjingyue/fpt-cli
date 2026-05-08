@@ -37,7 +37,7 @@ npm install -g fpt-cli
 projectName/
 ├── .github              # github actions
 ├── projectName-web      # 网页端
-├── projectName-server   # 后端
+├── projectName-server   # 服务端
 ```
 
 3. 创建项目
@@ -138,6 +138,7 @@ echo $MAIL_PASSWORD
     │   ├── apis                # 后端接口
     │   ├── assets              # 静态资源
     │   ├── components          # 组件
+    │   ├── composables         # 组合式函数
     │   ├── router              # 路由配置
     │   ├── store               # 状态管理
     │   ├── types               # 类型定义

@@ -26,7 +26,7 @@
 1. 安装 cli 工具
 
 ```bash
-npm install -g fpt-cli
+npm install -g @qingjingyue/fpt-cli
 ```
 
 2. 准备好项目目录

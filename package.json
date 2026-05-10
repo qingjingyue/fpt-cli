@@ -1,5 +1,5 @@
 {
-	"name": "fpt-cli",
+	"name": "@qingjingyue/fpt-cli",
 	"version": "1.0.0",
 	"description": "快速创建项目的脚手架",
 	"main": "./bin/fpt.js",
@@ -44,6 +44,7 @@
 		"!templates/springboot/common/target",
 		"!templates/springboot/domain/target",
 		"!templates/springboot/server/target",
+		"!templates/springboot/server/logs",
 		"!templates/vue/.vscode",
 		"!templates/vue/node_modules",
 		"utils"

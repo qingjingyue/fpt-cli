@@ -8,6 +8,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -84,6 +85,19 @@ public class GlobalExceptionHandler {
             return Result.error("该用户名已存在");
         }
         return Result.error(MessageConstant.UNKNOWN_ERROR);
+    }
+
+    /// 捕获http解析异常
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result<Void> exceptionHandler(HttpMessageNotReadableException e) {
+        // JSON parse error: Cannot construct instance of `com.example.common.enums.AuthType`, problem: 不支持的认证方式
+        log.error("http解析异常: ", e);
+        String message = e.getMessage();
+        if (message.contains("problem")) {
+            String problem = message.split("problem: ")[1];
+            return Result.error(problem);
+        }
+        return Result.error("请求参数错误");
     }
 
 

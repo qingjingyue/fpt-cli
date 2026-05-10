@@ -36,3 +36,5 @@ target
 __screenshots__/
 
 test
+
+.npmrc

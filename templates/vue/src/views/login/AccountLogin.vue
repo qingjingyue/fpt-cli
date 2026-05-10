@@ -35,26 +35,26 @@
 
 		<el-form
 			v-if="!isRegister"
-			ref="accountLoginFormRef"
-			:model="accountLoginForm"
-			:rules="accountLoginRules"
+			ref="loginFormRef"
+			:model="loginForm"
+			:rules="loginRules"
 			label-position="top"
 		>
 			<el-form-item label="账号: " prop="account">
-				<el-input v-model="accountLoginForm.account" placeholder="请输入用户名"> </el-input>
+				<el-input v-model="loginForm.account" placeholder="请输入用户名"> </el-input>
 			</el-form-item>
 			<el-form-item label="密码: " prop="password">
-				<el-input v-model="accountLoginForm.password" placeholder="请输入密码"> </el-input>
+				<el-input v-model="loginForm.password" placeholder="请输入密码"> </el-input>
 			</el-form-item>
 			<el-form-item prop="isRemember">
-				<el-checkbox v-model="accountLoginForm.isRemember" label="记住我" />
+				<el-checkbox v-model="loginForm.isRemember" label="记住我" />
 			</el-form-item>
 			<el-form-item>
 				<el-button
-					:loading="isLoading"
+					:loading="isLoginLoading"
 					type="primary"
 					style="width: 100%"
-					@click="accountLogin"
+					@click="login"
 					>登录
 				</el-button>
 			</el-form-item>
@@ -70,12 +70,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import router from '@/router'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { authApi } from '@/apis'
 import { useAuthStore } from '@/stores'
+import { useRequest } from '@/composables'
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 
 // 定义是否注册状态
 const isRegister = ref(false)
+
+// -----------------------------------------------------------------------------------------------------------
 
 // 定义注册表单引用
 const registerFormRef = ref<FormInstance>()
@@ -102,7 +105,7 @@ const registerRules = ref<FormRules<typeof registerForm.value>>({
 		{
 			validator: (rule, value, callback) => {
 				if (value !== registerForm.value.password) {
-					callback(new Error('两次密码不一致'))
+					callback('两次密码不一致')
 				} else {
 					callback()
 				}
@@ -112,19 +115,10 @@ const registerRules = ref<FormRules<typeof registerForm.value>>({
 	]
 })
 
-// 注册提交loading状态
-const isRegisterLoading = ref(false)
-
 // 账号注册表单提交
-const register = async () => {
+const { loading: isRegisterLoading, run: register } = useRequest(async () => {
 	// 校验表单
 	await registerFormRef.value?.validate()
-	// 注册提交loading状态
-	isRegisterLoading.value = true
-	const timer = setTimeout(() => {
-		isRegisterLoading.value = false
-		clearTimeout(timer)
-	}, 2000)
 	const { account, password } = registerForm.value
 	await authApi.login({
 		login: false,
@@ -132,28 +126,26 @@ const register = async () => {
 		account,
 		credential: password
 	})
-	// 注册提交loading状态
-	isRegisterLoading.value = false
 	// 提示注册成功
 	ElMessage.success('注册成功')
 	// 跳转登录
 	isRegister.value = false
-}
+})
 
 // -----------------------------------------------------------------------------------------------------------
 
 // 定义注册登录表单引用
-const accountLoginFormRef = ref<FormInstance>()
+const loginFormRef = ref<FormInstance>()
 
 // 定义账号登录表单数据
-const accountLoginForm = ref({
+const loginForm = ref({
 	account: '',
 	password: '',
 	isRemember: false
 })
 
 // 定义账号登录表单校验规则
-const accountLoginRules = ref<FormRules<typeof accountLoginForm.value>>({
+const loginRules = ref<FormRules<typeof loginForm.value>>({
 	account: [
 		{ required: true, message: '请输入账号', trigger: 'blur' },
 		{ min: 6, max: 12, message: '长度必须为 6-12 个字符', trigger: 'blur' }
@@ -164,20 +156,11 @@ const accountLoginRules = ref<FormRules<typeof accountLoginForm.value>>({
 	]
 })
 
-// 登录提交loading状态
-const isLoading = ref(false)
-
 // 账号登录提交
-const accountLogin = async () => {
+const { loading: isLoginLoading, run: login } = useRequest(async () => {
 	// 校验表单
-	await accountLoginFormRef.value?.validate()
-	// 登录提交loading状态
-	isLoading.value = true
-	const timer = setTimeout(() => {
-		isLoading.value = false
-		clearTimeout(timer)
-	}, 2000)
-	const { account, password } = accountLoginForm.value
+	await loginFormRef.value?.validate()
+	const { account, password } = loginForm.value
 	const res = await authApi.login({
 		login: true,
 		authType: 'account',
@@ -185,13 +168,11 @@ const accountLogin = async () => {
 		credential: password
 	})
 	useAuthStore().setAuthInfo(res)
-	// 登录提交loading状态
-	isLoading.value = false
 	// 提示登录成功
 	ElMessage.success('登录成功')
 	// 跳转首页
 	await router.push('/')
-}
+})
 </script>
 
 <style scoped></style>

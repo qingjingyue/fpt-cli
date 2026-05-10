@@ -68,11 +68,11 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router'
-import { useUserStore } from '@/stores'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { ref } from 'vue'
-import { userApi } from '@/apis/user'
+import router from '@/router'
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { authApi } from '@/apis'
+import { useAuthStore } from '@/stores'
 
 // 定义是否注册状态
 const isRegister = ref(false)
@@ -126,7 +126,12 @@ const register = async () => {
 		clearTimeout(timer)
 	}, 2000)
 	const { account, password } = registerForm.value
-	await userApi.registerByAccount({ account, password })
+	await authApi.login({
+		login: false,
+		authType: 'account',
+		account,
+		credential: password
+	})
 	// 注册提交loading状态
 	isRegisterLoading.value = false
 	// 提示注册成功
@@ -173,8 +178,13 @@ const accountLogin = async () => {
 		clearTimeout(timer)
 	}, 2000)
 	const { account, password } = accountLoginForm.value
-	const res = await userApi.loginByAccount({ account, password })
-	useUserStore().setUserInfo(res)
+	const res = await authApi.login({
+		login: true,
+		authType: 'account',
+		account,
+		credential: password
+	})
+	useAuthStore().setAuthInfo(res)
 	// 登录提交loading状态
 	isLoading.value = false
 	// 提示登录成功

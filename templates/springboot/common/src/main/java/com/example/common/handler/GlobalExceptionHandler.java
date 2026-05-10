@@ -80,6 +80,7 @@ public class GlobalExceptionHandler {
     public Result<Void> exceptionHandler(DuplicateKeyException e) {
         // Duplicate entry 'username' for key 'user.username'
         // username重复
+        log.error("数据库唯一索引异常: ", e);
         String message = e.getMessage();
         if (message.contains("Duplicate entry ")) {
             return Result.error("该用户名已存在");

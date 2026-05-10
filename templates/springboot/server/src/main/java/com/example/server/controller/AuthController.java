@@ -8,7 +8,7 @@ import com.example.common.result.Result;
 import com.example.common.utils.JwtUtil;
 import com.example.domain.dto.LoginDTO;
 import com.example.domain.po.User;
-import com.example.domain.vo.UserInfoVO;
+import com.example.domain.vo.LoginVO;
 import com.example.server.auth.AuthManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,10 +38,10 @@ public class AuthController {
 
     @Operation(summary = "用户登录")
     @PostMapping("/login")
-    public Result<UserInfoVO> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public Result<LoginVO> login(@Valid @RequestBody LoginDTO loginDTO) {
         User user = authManager.doAuth(loginDTO);
         String token = JwtUtil.createJWT(user.getId(), jwtProperties);
-        UserInfoVO vo = BeanUtil.copyProperties(user, UserInfoVO.class);
+        LoginVO vo = BeanUtil.copyProperties(user, LoginVO.class);
         vo.setToken(token);
         return Result.success(vo);
     }

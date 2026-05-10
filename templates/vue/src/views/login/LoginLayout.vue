@@ -18,9 +18,9 @@
 						</el-col>
 					</el-row>
 					<el-tabs v-model="activeTab">
-						<AccountLogin />
-						<EmailLogin />
-						<PhoneLogin />
+						<AccountLogin v-if="loginWays.includes('account')" />
+						<EmailLogin v-if="loginWays.includes('email')" />
+						<PhoneLogin v-if="loginWays.includes('phone')" />
 					</el-tabs>
 				</div>
 			</div>
@@ -29,10 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import AccountLogin from '@/views/login/AccountLogin.vue'
 import EmailLogin from '@/views/login/EmailLogin.vue'
 import PhoneLogin from '@/views/login/PhoneLogin.vue'
+import { authApi } from '@/apis'
 
 // 定义登录选项卡
 const activeTab = ref('accountLogin')
@@ -50,6 +51,18 @@ const getClipPath = (side: string) => {
 		return `polygon(0 ${100 - offset * 100}%, 0 100%, 100% 100%, 100% ${offset * 100}%)`
 	}
 }
+
+// 获取登录方式
+const loginWays = ref<string[]>([])
+const getLoginWays = async () => {
+	const res = await authApi.getLoginWay()
+	if (res.length === 0) loginWays.value.push('account')
+	else loginWays.value.push(...res)
+}
+
+onMounted(() => {
+	getLoginWays()
+})
 </script>
 
 <style scoped>

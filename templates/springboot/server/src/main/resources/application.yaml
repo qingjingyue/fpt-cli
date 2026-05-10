@@ -97,7 +97,7 @@ example:
   login:
     way: # 登录方式
       account: true    # 账号密码登录
-      phone: false    # 手机号登录
+      phone: true    # 手机号登录
       email: true    # 邮箱登录
     verify-code: # 验证码配置
       ttl: 5    # 有效时间, 单位: 分钟

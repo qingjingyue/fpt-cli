@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "登录响应数据")
-public class UserInfoVO {
+public class LoginVO {
 
     @Schema(description = "用户ID")
     private Long id;

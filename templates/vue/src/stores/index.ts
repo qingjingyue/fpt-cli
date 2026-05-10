@@ -5,7 +5,7 @@ import persist from 'pinia-plugin-persistedstate'
 const pinia = createPinia()
 pinia.use(persist)
 
-export * from './models/user'
 export * from './models/theme'
+export * from './models/auth'
 
 export default pinia

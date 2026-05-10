@@ -7,14 +7,14 @@ import { useThemeStore } from '@/stores'
 const themeStore = useThemeStore()
 
 // 登录状态
-import { useUserStore } from '@/stores'
-const userStore = useUserStore()
-const userInfo = userStore.getUserInfo()
-const isLogin = ref(userInfo?.id !== undefined)
+import { useAuthStore } from '@/stores'
+const authStore = useAuthStore()
+const authInfo = authStore.getAuthInfo()
+const isLogin = ref(authInfo?.id !== undefined)
 
 // 退出登录
 const logout = () => {
-	userStore.removeUserInfo()
+	authStore.removeAuthInfo()
 	// isLogin.value = false
 	// 刷新页面
 	window.location.reload()
@@ -45,11 +45,11 @@ const logout = () => {
 									>
 										<el-avatar
 											:src="
-												userInfo?.avatar || 'src/assets/default_avatar.png'
+												authInfo?.avatar || 'src/assets/default_avatar.png'
 											"
 										/>
 										<span style="margin-left: 5px">
-											{{ userInfo?.username }}
+											{{ authInfo?.username }}
 										</span>
 									</div>
 									<template #dropdown>

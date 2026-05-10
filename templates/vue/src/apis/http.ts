@@ -1,7 +1,9 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores'
+import { useAuthStore } from '@/stores'
+
+const authStore = useAuthStore()
 
 // 后端统一响应类型
 export type Result<T = never> = {
@@ -30,7 +32,7 @@ const http = axios.create({
 http.interceptors.request.use(
 	(request) => {
 		// 请求统一携带token
-		const token = useUserStore().getUserInfo()?.token ?? false
+		const token = authStore.getAuthInfo()?.token ?? false
 		if (token) {
 			request.headers['token'] = token
 		}
@@ -58,7 +60,7 @@ http.interceptors.response.use(
 		// 错误特殊情况 => 401 权限不足 或 token过期 => 强制跳转到登录页
 		if (error.response.status === 401) {
 			// 清空无效用户信息
-			useUserStore().removeUserInfo()
+			authStore.removeAuthInfo()
 			// 强制跳转到登录页
 			router.push('/login')
 		}

@@ -2,8 +2,8 @@ import { ref, reactive, onUnmounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
-import { useUserStore } from '@/stores'
-import { userApi } from '@/apis/user'
+import { authApi } from '@/apis'
+import { useAuthStore } from '@/stores'
 
 type LoginType = 'email' | 'phone'
 
@@ -53,11 +53,7 @@ export function useVerificationLogin(options: UseVerificationLoginOptions) {
 				trigger: 'blur'
 			},
 			{
-				validator: (
-					_rule,
-					value,
-					callback
-				) => {
+				validator: (_rule, value, callback) => {
 					if (config.pattern.test(value)) {
 						isDisabled.value = false
 						callback()
@@ -95,8 +91,11 @@ export function useVerificationLogin(options: UseVerificationLoginOptions) {
 		await formRef.value?.validateField(config.fieldName)
 		if (isCodeSent.value) return
 
-		const accountValue = (formData)[config.fieldName] as string
-		await userApi.getVerifyCode(config.codeType, accountValue)
+		const accountValue = formData[config.fieldName] as string
+		await authApi.getVerifyCode({
+			authType: config.codeType,
+			account: accountValue
+		})
 
 		isCodeSent.value = true
 		isDisabled.value = true
@@ -119,17 +118,16 @@ export function useVerificationLogin(options: UseVerificationLoginOptions) {
 		isLoading.value = true
 
 		try {
-			const accountValue = (formData)[config.fieldName] as string
+			const accountValue = formData[config.fieldName] as string
 			const { code } = formData
-			let res;
 
-			if (type === 'email') {
-				res = await userApi.loginByEmail({ email: accountValue, code })
-			} else {
-				res = await userApi.loginByPhone({ phone: accountValue, code })
-			}
+			const res = await authApi.login({
+				authType: config.codeType,
+				account: accountValue,
+				credential: code
+			})
 
-			useUserStore().setUserInfo(res)
+			useAuthStore().setAuthInfo(res)
 			ElMessage.success('登录成功')
 			await router.push('/')
 		} catch (error) {

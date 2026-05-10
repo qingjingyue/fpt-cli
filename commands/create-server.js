@@ -1,6 +1,7 @@
 import { Constants } from '../utils/constants.js'
 import fs from 'fs-extra'
 import path from 'path'
+import { createGithubActions } from './create-githubactions.js'
 
 // 与登录方式有关的内容
 const loginWayMap = {
@@ -64,36 +65,13 @@ export async function createServer(options) {
 
 	// 处理GitHub Actions 相关文件
 	if (options.githubActions) {
-		for (const file of githubActionsList) {
-			const templateFilePath = path.join(templatePath, file)
-			const destFilePath = path.join(destPath, file)
-			// 读取模板文件内容
-			const templateContent = fs.readFileSync(templateFilePath, 'utf-8')
-			// 替换项目名称 ('example' -> name)
-			const renderedContent = templateContent.replaceAll('example', name)
-			// 确保目标目录存在
-			fs.ensureDirSync(path.dirname(destFilePath))
-			// 写入渲染结果到文件
-			fs.writeFileSync(destFilePath, renderedContent)
-		}
-		// 处理workflow文件
-		const WorkflowTemplatePath = path.join(
+		createGithubActions(
+			githubActionsList,
 			templatePath,
-			'..',
+			destPath,
+			name,
 			deployFilePath
 		)
-		const WorkflowDestPath = path.join(destPath, '..', deployFilePath)
-		// 读取workflow文件内容
-		const workflowContent = fs.readFileSync(WorkflowTemplatePath, 'utf-8')
-		// 替换项目名称 ('example' -> name)
-		const replacedWorkflowContent = workflowContent.replaceAll(
-			'example',
-			name
-		)
-		// 确保目标目录存在
-		fs.ensureDirSync(path.dirname(WorkflowDestPath))
-		// 写入渲染结果到文件
-		fs.writeFileSync(WorkflowDestPath, replacedWorkflowContent)
 	}
 
 	console.log(`项目${Constants.cmdDirName}-server创建成功`)

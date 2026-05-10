@@ -1,23 +1,24 @@
 import { Constants } from '../utils/constants.js'
 import fs from 'fs-extra'
 import path from 'path'
+import { createGithubActions } from './create-githubactions.js'
 
-// 与登录方式有关的内容
-const loginWayMap = {
-	account: {
-		path: path.join('src', 'views', 'login', 'AccountLogin.vue'),
-		name: 'AccountLogin'
-	},
-	phone: {
-		path: path.join('src', 'views', 'login', 'PhoneLogin.vue'),
-		name: 'PhoneLogin'
-	},
-	email: {
-		path: path.join('src', 'views', 'login', 'EmailLogin.vue'),
-		name: 'EmailLogin'
-	}
-}
-const loginLayoutPath = path.join('src', 'views', 'login', 'LoginLayout.vue')
+// // 与登录方式有关的内容
+// const loginWayMap = {
+// 	account: {
+// 		path: path.join('src', 'views', 'login', 'AccountLogin.vue'),
+// 		name: 'AccountLogin'
+// 	},
+// 	phone: {
+// 		path: path.join('src', 'views', 'login', 'PhoneLogin.vue'),
+// 		name: 'PhoneLogin'
+// 	},
+// 	email: {
+// 		path: path.join('src', 'views', 'login', 'EmailLogin.vue'),
+// 		name: 'EmailLogin'
+// 	}
+// }
+// const loginLayoutPath = path.join('src', 'views', 'login', 'LoginLayout.vue')
 
 // 与GitHub Actions有关的内容
 const githubActionsList = [
@@ -35,7 +36,7 @@ const excludeDirs = ['.vscode', 'node_modules', 'dist', 'conf.d']
 const excludeFiles = [
 	'auto-imports.d.ts',
 	'components.d.ts',
-	...Object.values(loginWayMap).map((item) => item.path),
+	// ...Object.values(loginWayMap).map((item) => item.path),
 	...githubActionsList,
 	...renderFiles
 ]
@@ -88,66 +89,43 @@ export async function createWeb(options) {
 		fs.writeFileSync(destFilePath, renderedContent)
 	})
 
-	// 处理登录方式相关文件
-	for (const [key, value] of Object.entries(options.loginWay)) {
-		if (!value) continue
-		// 模板登录方式文件路径
-		const templateLoginWayPath = path.join(
-			templatePath,
-			loginWayMap[key].path
-		)
-		// 目标登录方式文件路径
-		const destLoginWayPath = path.join(destPath, loginWayMap[key].path)
-		fs.copyFileSync(templateLoginWayPath, destLoginWayPath)
-	}
-	// 处理登录布局文件
-	if (Object.values(options.loginWay).includes(false)) {
-		const destLoginLayoutPath = path.join(destPath, loginLayoutPath)
-		let content = fs.readFileSync(destLoginLayoutPath, 'utf-8')
-		for (const [key, value] of Object.entries(options.loginWay)) {
-			if (value) continue
-			content = content
-				.replaceAll(`<${loginWayMap[key].name} />`, '')
-				.replaceAll(
-					`import ${loginWayMap[key].name} from '@/views/login/${loginWayMap[key].name}.vue'`,
-					''
-				)
-		}
-		fs.writeFileSync(destLoginLayoutPath, content)
-	}
+	// // 处理登录方式相关文件
+	// for (const [key, value] of Object.entries(options.loginWay)) {
+	// 	if (!value) continue
+	// 	// 模板登录方式文件路径
+	// 	const templateLoginWayPath = path.join(
+	// 		templatePath,
+	// 		loginWayMap[key].path
+	// 	)
+	// 	// 目标登录方式文件路径
+	// 	const destLoginWayPath = path.join(destPath, loginWayMap[key].path)
+	// 	fs.copyFileSync(templateLoginWayPath, destLoginWayPath)
+	// }
+	// // 处理登录布局文件
+	// if (Object.values(options.loginWay).includes(false)) {
+	// 	const destLoginLayoutPath = path.join(destPath, loginLayoutPath)
+	// 	let content = fs.readFileSync(destLoginLayoutPath, 'utf-8')
+	// 	for (const [key, value] of Object.entries(options.loginWay)) {
+	// 		if (value) continue
+	// 		content = content
+	// 			.replaceAll(`<${loginWayMap[key].name} />`, '')
+	// 			.replaceAll(
+	// 				`import ${loginWayMap[key].name} from '@/views/login/${loginWayMap[key].name}.vue'`,
+	// 				''
+	// 			)
+	// 	}
+	// 	fs.writeFileSync(destLoginLayoutPath, content)
+	// }
 
 	// 处理GitHub Actions 相关文件
 	if (options.githubActions) {
-		for (const file of githubActionsList) {
-			const templateFilePath = path.join(templatePath, file)
-			const destFilePath = path.join(destPath, file)
-			// 读取模板文件内容
-			const templateContent = fs.readFileSync(templateFilePath, 'utf-8')
-			// 替换项目名称 ('example' -> name)
-			const renderedContent = templateContent.replaceAll('example', name)
-			// 确保目标目录存在
-			fs.ensureDirSync(path.dirname(destFilePath))
-			// 写入渲染结果到文件
-			fs.writeFileSync(destFilePath, renderedContent)
-		}
-		// 处理workflow文件
-		const WorkflowTemplatePath = path.join(
+		createGithubActions(
+			githubActionsList,
 			templatePath,
-			'..',
+			destPath,
+			name,
 			deployFilePath
 		)
-		const WorkflowDestPath = path.join(destPath, '..', deployFilePath)
-		// 读取workflow文件内容
-		const workflowContent = fs.readFileSync(WorkflowTemplatePath, 'utf-8')
-		// 替换项目名称 ('example' -> name)
-		const replacedWorkflowContent = workflowContent.replaceAll(
-			'example',
-			name
-		)
-		// 确保目标目录存在
-		fs.ensureDirSync(path.dirname(WorkflowDestPath))
-		// 写入渲染结果到文件
-		fs.writeFileSync(WorkflowDestPath, replacedWorkflowContent)
 	}
 
 	console.log(`项目${Constants.cmdDirName}-web创建成功`)

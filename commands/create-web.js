@@ -2,44 +2,24 @@ import { Constants } from '../utils/constants.js'
 import fs from 'fs-extra'
 import path from 'path'
 import { createGithubActions } from './create-githubactions.js'
-
-// // 与登录方式有关的内容
-// const loginWayMap = {
-// 	account: {
-// 		path: path.join('src', 'views', 'login', 'AccountLogin.vue'),
-// 		name: 'AccountLogin'
-// 	},
-// 	phone: {
-// 		path: path.join('src', 'views', 'login', 'PhoneLogin.vue'),
-// 		name: 'PhoneLogin'
-// 	},
-// 	email: {
-// 		path: path.join('src', 'views', 'login', 'EmailLogin.vue'),
-// 		name: 'EmailLogin'
-// 	}
-// }
-// const loginLayoutPath = path.join('src', 'views', 'login', 'LoginLayout.vue')
+import { createSkills } from './create-skills.js'
 
 // 与GitHub Actions有关的内容
-const githubActionsList = [
-	path.join('conf.d', 'default.conf'),
-	'docker-compose.yaml'
-]
 const deployFilePath = path.join('.github', 'workflows', 'deploy-web.yml')
 
 // 定义需要渲染的文件
-const renderFiles = [path.join('env', '.env'), 'index.html', 'package.json']
+const renderFiles = [
+	path.join('conf.d', 'default.conf'),
+	path.join('env', '.env'),
+	'docker-compose.yaml',
+	'index.html',
+	'package.json'
+]
 
 // 定义排除目录
 const excludeDirs = ['.vscode', 'node_modules', 'dist', 'conf.d']
 // 定义排除文件
-const excludeFiles = [
-	'auto-imports.d.ts',
-	'components.d.ts',
-	// ...Object.values(loginWayMap).map((item) => item.path),
-	...githubActionsList,
-	...renderFiles
-]
+const excludeFiles = ['auto-imports.d.ts', 'components.d.ts', ...renderFiles]
 
 // 项目名称
 const name = Constants.cmdDirName
@@ -56,6 +36,7 @@ const destPath = path.join(Constants.cmdDir, Constants.cmdDirName + '-web')
  * @param {boolean} options.loginWay.phone
  * @param {boolean} options.loginWay.email
  * @param {boolean} options.githubActions 是否使用 GitHub Actions 自动部署项目
+ * @param {boolean} options.skills 是否生成 Claude Code 开发规范 skills
  */
 export async function createWeb(options) {
 	if (fs.pathExistsSync(destPath)) {
@@ -77,6 +58,7 @@ export async function createWeb(options) {
 		}
 	})
 
+	fs.ensureDirSync(path.join(destPath, 'conf.d'))
 	// 渲染指定文件 ('example' -> name)
 	renderFiles.forEach((file) => {
 		const templateFilePath = path.join(templatePath, file)
@@ -89,43 +71,14 @@ export async function createWeb(options) {
 		fs.writeFileSync(destFilePath, renderedContent)
 	})
 
-	// // 处理登录方式相关文件
-	// for (const [key, value] of Object.entries(options.loginWay)) {
-	// 	if (!value) continue
-	// 	// 模板登录方式文件路径
-	// 	const templateLoginWayPath = path.join(
-	// 		templatePath,
-	// 		loginWayMap[key].path
-	// 	)
-	// 	// 目标登录方式文件路径
-	// 	const destLoginWayPath = path.join(destPath, loginWayMap[key].path)
-	// 	fs.copyFileSync(templateLoginWayPath, destLoginWayPath)
-	// }
-	// // 处理登录布局文件
-	// if (Object.values(options.loginWay).includes(false)) {
-	// 	const destLoginLayoutPath = path.join(destPath, loginLayoutPath)
-	// 	let content = fs.readFileSync(destLoginLayoutPath, 'utf-8')
-	// 	for (const [key, value] of Object.entries(options.loginWay)) {
-	// 		if (value) continue
-	// 		content = content
-	// 			.replaceAll(`<${loginWayMap[key].name} />`, '')
-	// 			.replaceAll(
-	// 				`import ${loginWayMap[key].name} from '@/views/login/${loginWayMap[key].name}.vue'`,
-	// 				''
-	// 			)
-	// 	}
-	// 	fs.writeFileSync(destLoginLayoutPath, content)
-	// }
-
 	// 处理GitHub Actions 相关文件
 	if (options.githubActions) {
-		createGithubActions(
-			githubActionsList,
-			templatePath,
-			destPath,
-			name,
-			deployFilePath
-		)
+		createGithubActions(templatePath, destPath, name, deployFilePath)
+	}
+
+	// 处理 Claude Code skills
+	if (options.skills) {
+		createSkills(destPath, 'frontend-dev-standards')
 	}
 
 	console.log(`项目${Constants.cmdDirName}-web创建成功`)

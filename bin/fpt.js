@@ -24,6 +24,7 @@ program
 	.option('-e, --endpoint <endpoint>', '要创建的端 {web,server}')
 	.option('--login-way <loginWay>', '登录方式 {account,phone,email}')
 	.option('--github-actions', '使用 GitHub Actions 自动部署项目')
+	.option('--skills', '生成 Claude Code 开发规范 skills')
 	.action(async (options) => await create(options))
 
 // 清理目录命令

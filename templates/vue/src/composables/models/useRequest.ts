@@ -1,5 +1,12 @@
 import { ref, shallowRef } from 'vue'
 
+/**
+ * 处理请求的加载状态
+ * @param requestFn 请求函数
+ * @param options 配置项
+ * @param options.loadTime 指定加载时间
+ * @returns
+ */
 export function useRequest<T>(requestFn: () => Promise<T>, options?: { loadTime?: number }) {
 	const loading = ref(false)
 	const error = ref<Error | null>(null)

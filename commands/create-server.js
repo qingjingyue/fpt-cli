@@ -2,6 +2,7 @@ import { Constants } from '../utils/constants.js'
 import fs from 'fs-extra'
 import path from 'path'
 import { createGithubActions } from './create-githubactions.js'
+import { createSkills } from './create-skills.js'
 
 // 与登录方式有关的内容
 const loginWayMap = {
@@ -15,7 +16,6 @@ const loginWayMap = {
 }
 
 // 与GitHub Actions有关的内容
-const githubActionsList = ['docker-compose.yaml']
 const deployFilePath = path.join('.github', 'workflows', 'deploy-server.yml')
 
 // 定义需要渲染的文件
@@ -24,7 +24,7 @@ const renderFiles = []
 // 定义排除目录(写目录名即可)
 const excludeDirs = ['.idea', 'logs', 'target', 'test']
 // 定义排除文件
-const excludeFiles = [...githubActionsList, ...renderFiles]
+const excludeFiles = [...renderFiles]
 
 // 项目名称
 const name = Constants.cmdDirName
@@ -41,6 +41,7 @@ const destPath = path.join(Constants.cmdDir, Constants.cmdDirName + '-server')
  * @param {boolean} options.loginWay.phone
  * @param {boolean} options.loginWay.email
  * @param {boolean} options.githubActions 是否使用 GitHub Actions 自动部署项目
+ * @param {boolean} options.skills 是否生成 Claude Code 开发规范 skills
  */
 export async function createServer(options) {
 	if (fs.pathExistsSync(destPath)) {
@@ -65,13 +66,12 @@ export async function createServer(options) {
 
 	// 处理GitHub Actions 相关文件
 	if (options.githubActions) {
-		createGithubActions(
-			githubActionsList,
-			templatePath,
-			destPath,
-			name,
-			deployFilePath
-		)
+		createGithubActions(templatePath, destPath, name, deployFilePath)
+	}
+
+	// 处理 Claude Code skills
+	if (options.skills) {
+		createSkills(destPath, 'backend-dev-standards')
 	}
 
 	console.log(`项目${Constants.cmdDirName}-server创建成功`)

@@ -28,6 +28,7 @@ export async function create(options) {
 			email: false
 		}
 		options.githubActions = false
+		options.skills = false
 	}
 
 	// 交互式选项
@@ -119,6 +120,20 @@ export async function create(options) {
 			}
 		])
 		options.githubActions = githubActionsOptions.useGithubActions
+	}
+
+	// 处理是否生成 Claude Code 开发规范 skills
+	if (options.skills == null) {
+		const skillsOptions = await inquirer.prompt([
+			{
+				type: 'confirm',
+				name: 'useSkills',
+				message:
+					'是否生成 Claude Code 开发规范 skills（在 .claude/skills/ 目录下）？',
+				default: true
+			}
+		])
+		options.skills = skillsOptions.useSkills
 	}
 
 	// 解析选项

@@ -94,7 +94,7 @@ const {
 		await formRef.value?.validateField('phone')
 		// 发送验证码
 		const { phone } = formData.value
-		// await authApi.getVerifyCode({ authType: 'phone', account: phone })
+		await authApi.getVerifyCode({ authType: 'phone', account: phone })
 	},
 	{ loadTime: 60 }
 )

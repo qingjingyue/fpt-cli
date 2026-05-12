@@ -1,12 +1,16 @@
+# 工作流名称
 name: Publish Package
 
+# 触发条件
 on:
   push:
     tags: #提交标签
       - 'v*'
+  workflow_dispatch: # 允许手动触发
 
+# 设置权限
 permissions:
-  id-token: write  # OIDC 必需
+  # 只需要读取代码库的权限
   contents: read
 
 # 需要执行的任务

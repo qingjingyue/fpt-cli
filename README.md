@@ -124,7 +124,7 @@ fpt clear
 
 ? 是否使用 GitHub Actions 自动部署项目？ (y/N)
 
-? 是否生成 Claude Code 开发规范 skills（在 .claude/skills/ 目录下）？ (Y/n)
+? 是否生成 Claude Code 开发规范 skills ？ (Y/n)
 ```
 
 ## 模板项目

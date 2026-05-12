@@ -1,0 +1,46 @@
+name: Publish Package
+
+on:
+  push:
+    tags: #提交标签
+      - 'v*'
+
+permissions:
+  id-token: write  # OIDC 必需
+  contents: read
+
+# 需要执行的任务
+jobs:
+  # 任务名称 (发布)
+  publish:
+    # 运行环境
+    runs-on: ubuntu-latest
+
+    # 任务步骤
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v6
+
+      - name: 安装 node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false # 发布版本中永远不要使用缓存
+
+      - name: 安装 pnpm
+        run: |
+          npm -v
+          npm install pnpm -g
+          pnpm -v
+
+      - name: 安装依赖
+        run: pnpm ci
+
+      - name: 测试
+        run: pnpm test
+
+      - name: 发布
+        run: pnpm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -19,15 +19,6 @@ export function createSkills(destPath, skillName) {
 		'skills',
 		skillName
 	)
-	fs.ensureDirSync(skillsDestDir)
 
-	const skillFile = 'SKILL.md'
-	const skillContent = fs.readFileSync(
-		path.join(skillsTemplateDir, skillFile),
-		'utf-8'
-	)
-	fs.writeFileSync(
-		path.join(skillsDestDir, skillFile),
-		skillContent
-	)
+	fs.copySync(skillsTemplateDir, skillsDestDir)
 }

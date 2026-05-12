@@ -35,6 +35,3 @@ target
 # Vitest
 __screenshots__/
 
-test
-
-.npmrc

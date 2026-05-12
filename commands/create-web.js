@@ -17,7 +17,7 @@ const renderFiles = [
 ]
 
 // 定义排除目录
-const excludeDirs = ['.vscode', 'node_modules', 'dist', 'conf.d']
+const excludeDirs = ['.idea', '.vscode', 'node_modules', 'dist']
 // 定义排除文件
 const excludeFiles = ['auto-imports.d.ts', 'components.d.ts', ...renderFiles]
 
@@ -58,7 +58,6 @@ export async function createWeb(options) {
 		}
 	})
 
-	fs.ensureDirSync(path.join(destPath, 'conf.d'))
 	// 渲染指定文件 ('example' -> name)
 	renderFiles.forEach((file) => {
 		const templateFilePath = path.join(templatePath, file)

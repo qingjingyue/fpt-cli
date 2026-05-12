@@ -1,6 +1,6 @@
 {
 	"name": "@qingjingyue/fpt-cli",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "快速创建项目的脚手架",
 	"main": "./bin/fpt.js",
 	"type": "module",
@@ -9,7 +9,8 @@
 	},
 	"scripts": {
 		"dev-web": "cd templates/vue && pnpm dev",
-		"dev-server": "cd templates/springboot && mvn compile install && mvn spring-boot:run -pl server"
+		"dev-server": "cd templates/springboot && mvn compile install && mvn spring-boot:run -pl server",
+		"test": "node --test"
 	},
 	"keywords": [
 		"fpt",
@@ -23,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@types/fs-extra": "^11.0.4",
 		"eslint": "^9.37.0",
 		"globals": "^17.3.0",
 		"prettier": "3.6.2"

@@ -10,6 +10,7 @@ import { createServer } from './create-server.js'
  * @param {string} options.endpoint 要创建的端
  * @param {string} options.loginWay 登录方式
  * @param {boolean} options.githubActions 是否使用 GitHub Actions 自动部署项目
+ * @param {boolean} options.skills 是否生成 Claude Code 开发规范 skills
  */
 export async function create(options) {
 	// console.log(options)
@@ -129,7 +130,7 @@ export async function create(options) {
 				type: 'confirm',
 				name: 'useSkills',
 				message:
-					'是否生成 Claude Code 开发规范 skills（在 .claude/skills/ 目录下）？',
+					'是否生成 Claude Code 开发规范 skills ？',
 				default: true
 			}
 		])

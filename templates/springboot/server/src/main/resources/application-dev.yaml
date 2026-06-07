@@ -5,9 +5,9 @@ example:
   mysql:
     host: localhost
     password: 123456
-#    redis:
-#        host: localhost
-#        password: 123456
+  redis:
+      host: localhost
+      password: 123456
 #    rabbitmq:
 #        host: localhost
 #        password: 123456

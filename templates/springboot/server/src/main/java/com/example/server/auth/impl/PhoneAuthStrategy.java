@@ -1,5 +1,7 @@
 package com.example.server.auth.impl;
 
+import cloud.tianai.captcha.application.ImageCaptchaApplication;
+import cloud.tianai.captcha.spring.plugins.secondary.SecondaryVerificationApplication;
 import cn.hutool.core.util.ReUtil;
 import com.example.common.constants.RegexConstant;
 import com.example.common.enums.AuthType;
@@ -23,6 +25,7 @@ public class PhoneAuthStrategy implements AuthStrategy {
     private final UserService userService;
     private final SmsService smsService;
     private final ApplicationEventPublisher eventPublisher;
+    private final ImageCaptchaApplication imageCaptchaApplication;
 
     /// 获取认证类型
     @Override
@@ -33,6 +36,11 @@ public class PhoneAuthStrategy implements AuthStrategy {
     /// 进行身份验证
     @Override
     public User authenticate(LoginDTO loginDTO) {
+        // 行为验证码二次验证
+        boolean valid = ((SecondaryVerificationApplication) imageCaptchaApplication).secondaryVerification(loginDTO.getBehaviorCaptchaId());
+        if (!valid) {
+            throw new BizException("验证码验证失败");
+        }
         // 参数效验
         if (loginDTO.getAccount() == null) {
             throw new BizException("手机号不能为空");

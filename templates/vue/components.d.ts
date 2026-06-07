@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Captcha: typeof import('./src/components/captcha/Captcha.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -34,5 +35,8 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Verify: typeof import('./src/components/verifition/Verify.vue')['default']
+    VerifyPoints: typeof import('./src/components/verifition/Verify/VerifyPoints.vue')['default']
+    VerifySlide: typeof import('./src/components/verifition/Verify/VerifySlide.vue')['default']
   }
 }

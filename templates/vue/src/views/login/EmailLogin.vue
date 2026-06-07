@@ -32,6 +32,7 @@ import { authApi } from '@/apis'
 import { useAuthStore } from '@/stores'
 import { useRequest } from '@/composables'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { CaptchaBox } from '@/components/captcha'
 
 // 定义邮箱登录表单引用
 const formRef = ref<FormInstance>()
@@ -68,11 +69,13 @@ const rules = ref<FormRules<typeof formData.value>>({
 const { loading: isLoading, run: login } = useRequest(async () => {
 	// 校验表单
 	await formRef.value?.validate()
+	const id = await CaptchaBox.show()
 	const { email, code } = formData.value
 	const res = await authApi.login({
 		authType: 'email',
 		account: email,
-		credential: code
+		credential: code,
+		behaviorCaptchaId: id
 	})
 	useAuthStore().setAuthInfo(res)
 	// 提示登录成功

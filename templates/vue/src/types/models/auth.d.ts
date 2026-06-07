@@ -4,6 +4,7 @@ export type LoginDTO = {
 	authType: 'account' | 'phone' | 'email'
 	account: string
 	credential?: string
+	behaviorCaptchaId?: string
 }
 
 /// 登录响应数据

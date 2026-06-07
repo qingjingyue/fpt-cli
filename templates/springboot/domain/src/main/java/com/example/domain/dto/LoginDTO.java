@@ -27,4 +27,7 @@ public class LoginDTO {
 
     /// 凭证: 密码/验证码
     private String credential;
+
+    /// 行为验证码二次验证id
+    private String behaviorCaptchaId;
 }

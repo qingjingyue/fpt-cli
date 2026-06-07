@@ -5,9 +5,9 @@ example:
   mysql:
     host: example-mysql
     password: ${MYSQL_PASSWORD}
-#    redis:
-#        host: example-redis
-#        password: ${REDIS_PASSWORD}
+  redis:
+      host: example-redis
+      password: ${REDIS_PASSWORD}
 #    rabbitmq:
 #        host: example-rabbitmq
 #        password: ${RABBITMQ_PASSWORD}

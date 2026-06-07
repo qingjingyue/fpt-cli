@@ -19,6 +19,7 @@
 	"author": "fpt",
 	"dependencies": {
 		"commander": "^14.0.3",
+		"crypto-js": "^4.2.0",
 		"fs-extra": "^11.3.3",
 		"inquirer": "^13.4.2"
 	},
@@ -47,7 +48,10 @@
 		"!templates/springboot/domain/target",
 		"!templates/springboot/server/target",
 		"!templates/springboot/server/logs",
+		"!templates/springboot/server/src/test",
+		"!templates/vue/.idea",
 		"!templates/vue/.vscode",
+		"!templates/vue/dist",
 		"!templates/vue/node_modules",
 		"utils"
 	]

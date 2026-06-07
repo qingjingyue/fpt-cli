@@ -49,6 +49,12 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-cache</artifactId>
         </dependency>
+        <!--行为验证码-->
+        <dependency>
+            <groupId>cloud.tianai.captcha</groupId>
+            <artifactId>tianai-captcha-springboot-starter</artifactId>
+            <version>1.5.5</version>
+        </dependency>
         <!-- Spring Boot 自动配置依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,6 +90,12 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <scope>provided</scope> <!--provided: 编译时需要，运行时不需要, 不参与打包-->
+        </dependency>
+        <!--Redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
             <scope>provided</scope> <!--provided: 编译时需要，运行时不需要, 不参与打包-->
         </dependency>
         <!--mq 消息队列-->

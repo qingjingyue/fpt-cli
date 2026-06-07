@@ -9,9 +9,9 @@
 	"scripts": {
 		"dev": "vite --mode dev",
 		"dev:prod": "vite --mode prod",
-		"build": "vite build --mode dev",
-		"build:prod": "vite build --mode prod",
-		"preview": "vite preview",
+		"build": "tsc --noEmit && vite build --mode dev",
+		"build:prod": "tsc --noEmit && vite build --mode prod",
+		"preview": "tsc --noEmit && vite preview",
 		"lint": "eslint . --fix --cache",
 		"format": "prettier --write src/"
 	},

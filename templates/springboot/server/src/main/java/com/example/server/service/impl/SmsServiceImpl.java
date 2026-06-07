@@ -8,11 +8,11 @@ import com.aliyun.dypnsapi20170525.models.SendSmsVerifyCodeRequest;
 import com.example.common.constants.RedisConstant;
 import com.example.common.exceptions.BizException;
 import com.example.common.properties.LoginProperties;
-import com.example.common.utils.CacheUtil;
 import com.example.server.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,7 @@ public class SmsServiceImpl implements SmsService {
 
     private final Client phoneAuthClient;
     private final JavaMailSender mailSender;
+    private final StringRedisTemplate redisTemplate;
     private final LoginProperties.VerifyCodeProperties verifyCodeProperties;
     @Value("${spring.mail.username}")
     private String from;
@@ -83,8 +84,8 @@ public class SmsServiceImpl implements SmsService {
         String code = RandomUtil.randomNumbers(6);
         // 添加到缓存（key：邮箱，value：验证码，过期时间 verifyCodeTtl 分钟）
         String key = RedisConstant.KeyPrefix.USER_EMAIL_KEY_PREFIX + email;
-        // redisTemplate.opsForValue().set(key, code, verifyCodeTtl, TimeUnit.MINUTES);
-        CacheUtil.put(key, code, verifyCodeProperties.getTtl(), TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, code, verifyCodeProperties.getTtl(), TimeUnit.MINUTES);
+        // CacheUtil.put(key, code, verifyCodeProperties.getTtl(), TimeUnit.MINUTES);
         // 准备邮件
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
@@ -100,14 +101,14 @@ public class SmsServiceImpl implements SmsService {
     public boolean CheckEmailVerifyCode(String email, String code) {
         // 查缓存是否存在该验证码
         String key = RedisConstant.KeyPrefix.USER_EMAIL_KEY_PREFIX + email;
-        // String cacheCode = redisTemplate.opsForValue().get(key);
-        String cacheCode = CacheUtil.get(key);
+        String cacheCode = redisTemplate.opsForValue().get(key);
+        // String cacheCode = CacheUtil.get(key);
         // 校验验证码是否正确
         boolean verifyResult = code != null && code.equals(cacheCode);
         if (verifyResult) {
             // 校验成功后删除缓存
-            // redisTemplate.delete(key);
-            CacheUtil.remove(key);
+            redisTemplate.delete(key);
+            // CacheUtil.remove(key);
         }
         return verifyResult;
     }

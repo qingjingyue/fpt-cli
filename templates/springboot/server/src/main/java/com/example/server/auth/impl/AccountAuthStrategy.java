@@ -1,5 +1,7 @@
 package com.example.server.auth.impl;
 
+import cloud.tianai.captcha.application.ImageCaptchaApplication;
+import cloud.tianai.captcha.spring.plugins.secondary.SecondaryVerificationApplication;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.example.common.constants.RegexConstant;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class AccountAuthStrategy implements AuthStrategy {
 
     private final UserService userService;
+    private final ImageCaptchaApplication imageCaptchaApplication;
 
     /// 获取认证类型
     @Override
@@ -30,6 +33,11 @@ public class AccountAuthStrategy implements AuthStrategy {
     /// 进行身份验证
     @Override
     public User authenticate(LoginDTO loginDTO) {
+        // 行为验证码二次验证
+        boolean valid = ((SecondaryVerificationApplication) imageCaptchaApplication).secondaryVerification(loginDTO.getBehaviorCaptchaId());
+        if (!valid) {
+            throw new BizException("验证码验证失败");
+        }
         // 参数效验
         if (loginDTO.getAccount() == null) {
             throw new BizException("用户名不能为空");

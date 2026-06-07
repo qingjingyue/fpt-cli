@@ -46,7 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/error"
                 )
                 .excludePathPatterns(
-                        "/**/auth/**"
+                        "/**/auth/**",
+                        "/**/captcha/**"
                 );
     }
 

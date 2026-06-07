@@ -13,6 +13,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -99,6 +100,13 @@ public class GlobalExceptionHandler {
             return Result.error(problem);
         }
         return Result.error("请求参数错误");
+    }
+
+    /// 捕获请求路径不存在异常
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> exceptionHandler(NoResourceFoundException e) {
+        log.error("请求路径不存在: ", e);
+        return Result.error("请求路径不存在");
     }
 
 
